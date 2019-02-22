@@ -1,4 +1,5 @@
 #include "base/gl_renderer.h"
+#include <iostream>
 
 #ifdef GLES2
 #include <GLES2/gl2.h>
@@ -12,6 +13,11 @@ namespace APC
 {
     void GLRenderer::init(int w, int h)
     {
-        glViewport(0, 0, w, h);
+//        glViewport(0, 0, w, h);
+    }
+
+    void GLRenderer::draw()
+    {
+        std::cout << "Draw shit" << std::endl;
     }
 }

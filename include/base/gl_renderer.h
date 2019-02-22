@@ -6,5 +6,6 @@ namespace APC
     class GLRenderer : public IRenderer
     {
         void init(int w, int h) override;
+        void draw() override;
     };
 }
