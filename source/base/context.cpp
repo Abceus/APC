@@ -38,4 +38,14 @@ namespace APC
     {
         m_game->button(value);
     }
+
+    void Context::altButton( const Coord& value )
+    {
+        m_game->altButton(value);
+    }
+
+    void Context::holdedMove( const Coord& value )
+    {
+        m_game->holdedMove(value);
+    }
 }

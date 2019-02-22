@@ -21,6 +21,8 @@ namespace APC
         void draw() override;
         void zoom( float delta ) override;
         void button( const Coord& value ) override;
+        void altButton( const Coord& value ) override;
+        void holdedMove( const Coord& value ) override;
     private:
         Context();
         std::unique_ptr<IRenderer> m_renderer;

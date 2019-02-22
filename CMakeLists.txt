@@ -11,3 +11,10 @@ add_executable(
         source/base/context.cpp
         source/base/gl_renderer.cpp
         )
+
+
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLEW_INCLUDE_DIRS})
+target_link_libraries(andoirdPC ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glfw)
