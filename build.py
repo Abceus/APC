@@ -15,7 +15,16 @@ def android_build():
     subprocess.check_call("gradle build", stderr=subprocess.STDOUT, shell=True)
 
 def android_run():
-    pass
+    # TODO: 
+    # 1) Check running devices
+    # 2) Select from running device, update or run emulator
+    # 3) Wait device
+    # 4) Install apk
+    # 5) Run application
+    adb = os.path.join(os.environ['ANDROID_HOME'], "platform-tools", "adb")
+    subprocess.check_call( adb + " wait-for-device", stderr=subprocess.STDOUT, shell=True)
+    subprocess.check_call( adb + " install ./build/android/app/build/outputs/apk/debug/app-debug.apk", stderr=subprocess.STDOUT, shell=True)
+    subprocess.check_call( adb + " shell am start -a android.intent.action.MAIN -n com.apc.testapplication/.MainActivity", stderr=subprocess.STDOUT, shell=True)
 
 def android_clean():
     shutil.rmtree('./build/android/')
