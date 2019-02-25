@@ -39,6 +39,7 @@ const int WIDTH = 800, HEIGHT = 600;
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz) {
   APC::Context::getInstance().init<APC::GLRenderer, TestGame>(WIDTH, HEIGHT);
+  APC::Context::getInstance().setLogFunction( [&](std::stringstream& ss){ LOGI( "%s", ss.str().c_str() ); });
 }
 
 extern "C" JNIEXPORT void JNICALL

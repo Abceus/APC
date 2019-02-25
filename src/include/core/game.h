@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/utility.h"
+#include "core/context.h"
 
 namespace APC
 {
@@ -14,5 +15,13 @@ namespace APC
         virtual void altButton( const Coord& value ) = 0;
         virtual void holdedMove( const Coord &value ) = 0;
         virtual ~IGame() = default;
+        void setContext( IContext* context );
+    protected:
+        IContext* m_context;
     };
+
+    void IGame::setContext(APC::IContext *context)
+    {
+        m_context = context;
+    }
 }

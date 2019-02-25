@@ -48,6 +48,7 @@ public:
         glfwGetFramebufferSize(window, &width, &height);
 
         APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
+        APC::Context::getInstance().setLogFunction( [&](std::stringstream& ss){ std::cout << ss.str(); });
     }
     void run()
     {

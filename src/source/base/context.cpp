@@ -16,6 +16,7 @@ namespace APC
     void Context::init(int w, int h)
     {
         m_renderer->init(w, h);
+        m_game->setContext(this);
         m_game->init();
     }
 
