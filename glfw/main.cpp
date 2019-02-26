@@ -52,10 +52,14 @@ public:
     }
     void run()
     {
+        auto lastFrame = glfwGetTime();
         while (!glfwWindowShouldClose(window))
         {
             glfwPollEvents();
-            APC::Context::getInstance().update(1488.f);
+            auto currentFrame = glfwGetTime();
+            auto deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+            APC::Context::getInstance().update(deltaTime);
             APC::Context::getInstance().draw();
             glfwSwapBuffers(window);
         }
@@ -69,7 +73,7 @@ public:
     {
         double xpos, ypos;
         glfwGetCursorPos(window, &xpos, &ypos);
-        if(action == GLFW_PRESS)
+        if(action == GLFW_RELEASE)
         {
             switch( button )
             {

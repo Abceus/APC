@@ -322,14 +322,19 @@ class GL2JNIView extends GLSurfaceView {
         protected int mStencilSize;
         private int[] mValue = new int[1];
     }
-
     private static class Renderer implements GLSurfaceView.Renderer {
+        long lastFrame;
         public void onDrawFrame(GL10 gl) {
+            long currentFrame = System.currentTimeMillis();
+            long deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+            APCLib.update( deltaTime / 1000.f );
             APCLib.draw();
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
             APCLib.init();
+            lastFrame = System.currentTimeMillis();
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {

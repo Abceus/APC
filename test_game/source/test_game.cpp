@@ -7,7 +7,7 @@ void TestGame::init()
 
 void TestGame::update( float dt )
 {
-    m_context->log( "Update", dt );
+//    m_context->log( "Update", dt );
 }
 
 void TestGame::zoom( float delta )

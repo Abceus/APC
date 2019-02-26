@@ -44,6 +44,25 @@ Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz) {
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_draw(JNIEnv *env, jobject thiz) {
-  APC::Context::getInstance().update(1488.f);
-  APC::Context::getInstance().draw();
+APC::Context::getInstance().draw();
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_update(JNIEnv *env, jobject thiz, jfloat dt) {
+APC::Context::getInstance().update( static_cast<float>( dt ) );
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_button(JNIEnv *env, jobject thiz, jint x, jint y) {
+APC::Context::getInstance().button( { static_cast<int>( x ), static_cast<int>( y ) } );
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_altButton(JNIEnv *env, jobject thiz, jint x, jint y) {
+APC::Context::getInstance().altButton( { static_cast<int>( x ), static_cast<int>( y ) } );
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_holdedMove(JNIEnv *env, jobject thiz, jint x, jint y) {
+APC::Context::getInstance().holdedMove( { static_cast<int>( x ), static_cast<int>( y ) } );
 }

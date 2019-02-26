@@ -26,4 +26,8 @@ public class APCLib {
 
      public static native void init();
      public static native void draw();
+     public static native void update( float dt );
+     public static native void button( int x, int y );
+     public static native void altButton( int x, int y );
+     public static native void holdedMove( int x, int y );
 }
