@@ -66,3 +66,8 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_holdedMove(JNIEnv *env, jobject thiz, jint x, jint y) {
 APC::Context::getInstance().holdedMove( { static_cast<int>( x ), static_cast<int>( y ) } );
 }
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_zoom(JNIEnv *env, jobject thiz, jfloat delta) {
+APC::Context::getInstance().zoom( static_cast<float>( delta ) );
+}
