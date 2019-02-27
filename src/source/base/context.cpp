@@ -49,4 +49,14 @@ namespace APC
     {
         m_game->holdedMove(value);
     }
+
+    void Context::drag( const Coord& value )
+    {
+        m_game->drag(value);
+    }
+
+    void Context::drop( const Coord& value )
+    {
+        m_game->drop(value);
+    }
 }

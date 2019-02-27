@@ -78,7 +78,15 @@ public:
             switch( button )
             {
                 case GLFW_MOUSE_BUTTON_LEFT:
-                    APC::Context::getInstance().button( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+                    if( !m_dragged )
+                    {
+                        APC::Context::getInstance().button( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+                    }
+                    else
+                    {
+                        m_dragged = false;
+                        APC::Context::getInstance().drop( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+                    }
                     break;
                 case GLFW_MOUSE_BUTTON_RIGHT:
                     APC::Context::getInstance().altButton( { static_cast<int>(xpos), static_cast<int>(ypos) } );
@@ -97,7 +105,15 @@ public:
         int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
         if(state == GLFW_PRESS && m_mouseFocused)
         {
-            APC::Context::getInstance().holdedMove({ static_cast<int>(xpos), static_cast<int>(ypos) });
+            if( !m_dragged )
+            {
+                m_dragged = true;
+                APC::Context::getInstance().drag({ static_cast<int>(xpos), static_cast<int>(ypos) });
+            }
+            else
+            {
+                APC::Context::getInstance().holdedMove( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+            }
         }
     }
 
@@ -109,9 +125,11 @@ private:
     GLFWwindow* window;
     int width, height;
     static bool m_mouseFocused;
+    static bool m_dragged;
 };
 
 bool PC::m_mouseFocused = true;
+bool PC::m_dragged = true;
 
 int main()
 {

@@ -35,6 +35,8 @@ public class MainActivity extends Activity implements OnTouchListener {
  
 	private Timer holdTimer;
     private HoldTouchTask holdTimerTask;
+    private boolean dragged = false;
+    private boolean click = true;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -50,8 +52,10 @@ public class MainActivity extends Activity implements OnTouchListener {
                 holdTimer = new Timer();
                 holdTimerTask = new HoldTouchTask(x, y);
                 holdTimer.schedule(holdTimerTask, 2000);
+                click = true;
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
+                click = false;
                 holdTimer.cancel();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -66,13 +70,29 @@ public class MainActivity extends Activity implements OnTouchListener {
                 else
                 {
                     holdTimer.cancel();
-                    APCLib.holdedMove(x, y);
+                    if( !dragged )
+                    {
+                        dragged = true;
+                        APCLib.drag(x, y);
+                    }
+                    else
+                    {
+                        APCLib.holdedMove(x, y);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 holdTimer.cancel();
-                APCLib.button(x, y);
+                if( dragged )
+                {
+                    dragged = false;
+                    APCLib.drop(x, y);
+                }
+                else if( click )
+                {
+                    APCLib.button(x, y);
+                }
                 break;
         }
         return true;
@@ -88,6 +108,7 @@ public class MainActivity extends Activity implements OnTouchListener {
         }
 		@Override
 		public void run() {
+            click = false;
             APCLib.altButton(x, y);
 		}
 	}

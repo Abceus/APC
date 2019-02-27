@@ -9,4 +9,6 @@ public:
     void button( const APC::Coord& value ) override;
     void altButton( const APC::Coord& value ) override;
     void holdedMove( const APC::Coord &value ) override;
+    void drag( const APC::Coord& value ) override;
+    void drop( const APC::Coord &value ) override;
 };

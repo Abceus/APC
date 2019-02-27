@@ -30,5 +30,7 @@ public class APCLib {
      public static native void button( int x, int y );
      public static native void altButton( int x, int y );
      public static native void holdedMove( int x, int y );
+     public static native void drag( int x, int y );
+     public static native void drop( int x, int y );
      public static native void zoom( float delta );
 }
