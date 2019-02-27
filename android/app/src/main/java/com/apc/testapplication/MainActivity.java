@@ -11,6 +11,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.lang.Math;
 
 public class MainActivity extends Activity implements OnTouchListener {
 
@@ -37,6 +38,8 @@ public class MainActivity extends Activity implements OnTouchListener {
     private HoldTouchTask holdTimerTask;
     private boolean dragged = false;
     private boolean click = true;
+    private int[][] mTouches = new int[2][2];
+    private int initDist;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -53,19 +56,31 @@ public class MainActivity extends Activity implements OnTouchListener {
                 holdTimerTask = new HoldTouchTask(x, y);
                 holdTimer.schedule(holdTimerTask, 2000);
                 click = true;
+                mTouches[0][0] = x;
+                mTouches[0][1] = y;
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                click = false;
-                holdTimer.cancel();
+                if( pointerId == 1 )
+                {
+                    click = false;
+                    holdTimer.cancel();
+                    mTouches[1][0] = x;
+                    mTouches[1][1] = y;
+                    initDist = Math.abs(mTouches[0][0] - mTouches[1][0]) + Math.abs(mTouches[0][1] - mTouches[1][1]);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if( event.getPointerCount() > 1 )
                 {
-                    if( pointerId <= 1 )
-                    {
-                        // calc dist, zoom
-                        APCLib.zoom(1.f);
-                    }
+                    int otherX = (int)MotionEventCompat.getX(event, 1);
+                    int otherY = (int)MotionEventCompat.getY(event, 1);
+                    mTouches[0][0] = x;
+                    mTouches[0][1] = y;
+                    mTouches[1][0] = otherX;
+                    mTouches[1][1] = otherY;
+                    int currentDist = Math.abs(mTouches[0][0] - mTouches[1][0]) + Math.abs(mTouches[0][1] - mTouches[1][1]);
+                    APCLib.zoom((currentDist - initDist) / 100.f);
+                    initDist = currentDist;
                 }
                 else
                 {
@@ -78,6 +93,8 @@ public class MainActivity extends Activity implements OnTouchListener {
                     else
                     {
                         APCLib.holdedMove(x, y);
+                        mTouches[0][0] = x;
+                        mTouches[0][1] = y;
                     }
                 }
                 break;
