@@ -1,8 +1,16 @@
 #include "test_game.h"
+#include "base/resource_manager.h"
 
 void TestGame::init()
 {
     m_context->log( "Init" );
+    auto rm = APC::ResourceManager<int>();
+    auto a = rm.getResource( "testa" );
+    {
+        auto b = rm.getResource( "testb" );
+        auto c = rm.getResource( "testc" );
+    }
+    auto d = rm.getResource( "testd" );
 }
 
 void TestGame::update( float dt )

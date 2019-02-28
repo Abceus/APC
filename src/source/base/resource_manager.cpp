@@ -1,0 +1,1 @@
+#include "base/resource_manager.h"
