@@ -10,7 +10,7 @@ namespace APC
     class ResourcePtr
     {
     public:
-        ResourcePtr( std::function<void()>&& slot, const std::string& path );
+        ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path );
         ResourcePtr( const ResourcePtr& copy );
         ResourcePtr( ResourcePtr&& copy ) noexcept;
         ~ResourcePtr();
@@ -18,7 +18,7 @@ namespace APC
     private:
         ResourceType* m_value;
         long* m_count;
-        std::function<void()> m_removeSignal;
+        std::function<void(std::string)> m_removeSignal;
         std::string m_path;
         bool m_moved;
     };
@@ -41,7 +41,7 @@ namespace APC
 
     // Implementation
     template<typename ResourceType>
-    ResourcePtr<ResourceType>::ResourcePtr( std::function<void()>&& slot, const std::string& path )
+    ResourcePtr<ResourceType>::ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path )
             : m_value(new ResourceType())
             , m_count(new long(1))
             , m_removeSignal(std::move(slot))
@@ -102,7 +102,7 @@ namespace APC
         auto found = m_resources.find(path);
         if(found == m_resources.end())
         {
-            m_resources.emplace(path, ResourcePtr<ResourceType>( [this]( const std::string& path ){ this->m_resources.erase(path); } ));
+            m_resources.emplace(path, ResourcePtr<ResourceType>( [this]( const std::string& path ){ this->m_resources.erase(path); }, path ));
             found = m_resources.find(path);
         }
         return found->second;
