@@ -10,11 +10,15 @@ namespace APC
     class ResourcePtr
     {
     public:
+        ResourcePtr();
         ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path );
         ResourcePtr( const ResourcePtr& copy );
         ResourcePtr( ResourcePtr&& copy ) noexcept;
         ~ResourcePtr();
         ResourceType* operator->();
+        operator bool() const;
+        ResourcePtr<ResourceType>& operator=(ResourcePtr<ResourceType> const&);
+        ResourcePtr<ResourceType>& operator=(ResourcePtr<ResourceType>&&);
     private:
         ResourceType* m_value;
         long* m_count;
@@ -36,13 +40,25 @@ namespace APC
     {
     public:
         template<typename ResourceType>
-        ResourceType getResource( const std::string &path );
+        ResourcePtr<ResourceType> getResource( const std::string &path );
+        ResourcesManager(ResourcesManager const&) = delete;
+        void operator=(ResourcesManager const&) = delete;
+        static ResourcesManager& getInstance();
+    private:
+        ResourcesManager() = default;
     };
 
     // Implementation
     template<typename ResourceType>
+    ResourcePtr<ResourceType>::ResourcePtr()
+        : m_value(nullptr)
+        , m_count(nullptr)
+    {
+    }
+
+    template<typename ResourceType>
     ResourcePtr<ResourceType>::ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path )
-            : m_value(new ResourceType())
+            : m_value(new ResourceType( path ))
             , m_count(new long(1))
             , m_removeSignal(std::move(slot))
             , m_moved(false)
@@ -84,8 +100,11 @@ namespace APC
                 m_removeSignal(m_path);
             } else if ( *m_count == 0 )
             {
-                delete m_value;
-                delete m_count;
+                if(m_value)
+                {
+                    delete m_value;
+                    delete m_count;
+                }
             }
         }
     }
@@ -94,6 +113,34 @@ namespace APC
     ResourceType* ResourcePtr<ResourceType>::operator->()
     {
         return m_value;
+    }
+
+    template<typename ResourceType>
+    ResourcePtr<ResourceType>::operator bool() const
+    {
+        return m_value;
+    }
+
+    template<typename ResourceType>
+    ResourcePtr<ResourceType>& ResourcePtr<ResourceType>::operator=(ResourcePtr<ResourceType> const& copy)
+    {
+        m_count = copy.m_count;
+        m_value = copy.m_value;
+        m_removeSignal = copy.m_removeSignal;
+        m_path = copy.m_path;
+        m_moved = false;
+        (*m_count)++;
+    }
+
+    template<typename ResourceType>
+    ResourcePtr<ResourceType>& ResourcePtr<ResourceType>::operator=(ResourcePtr<ResourceType>&& copy)
+    {
+        m_count = copy.m_count;
+        m_value = copy.m_value;
+        m_path = copy.m_path;
+        m_moved = false;
+        m_removeSignal = std::move(copy.m_removeSignal);
+        copy.m_moved = true;
     }
 
     template<typename ResourceType>
@@ -109,9 +156,9 @@ namespace APC
     }
 
     template<typename ResourceType>
-    ResourceType ResourcesManager::getResource( const std::string &path )
+    ResourcePtr<ResourceType> ResourcesManager::getResource( const std::string &path )
     {
         static ResourceManager<ResourceType> rm;
-        return rm.getResource(path);
+        return rm.getResource( path );
     }
 }

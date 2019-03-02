@@ -2,11 +2,6 @@
 
 namespace APC
 {
-    Context::Context()
-    {
-
-    }
-
     Context& Context::getInstance()
     {
         static Context instance;

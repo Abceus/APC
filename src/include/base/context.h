@@ -26,7 +26,7 @@ namespace APC
         void drag( const Coord& value ) override;
         void drop( const Coord& value ) override;
     private:
-        Context();
+        Context() = default;
         std::unique_ptr<IRenderer> m_renderer;
         std::unique_ptr<IGame> m_game;
     };
