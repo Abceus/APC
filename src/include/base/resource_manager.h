@@ -130,6 +130,7 @@ namespace APC
         m_path = copy.m_path;
         m_moved = false;
         (*m_count)++;
+        return *this;
     }
 
     template<typename ResourceType>
@@ -141,6 +142,7 @@ namespace APC
         m_moved = false;
         m_removeSignal = std::move(copy.m_removeSignal);
         copy.m_moved = true;
+        return *this;
     }
 
     template<typename ResourceType>

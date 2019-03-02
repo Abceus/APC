@@ -54,4 +54,9 @@ namespace APC
     {
         m_game->drop(value);
     }
+
+    void Context::quit()
+    {
+        m_renderer->destroy();
+    }
 }

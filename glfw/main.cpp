@@ -64,8 +64,10 @@ public:
             glfwSwapBuffers(window);
         }
     }
+
     void deinit()
     {
+        APC::Context::getInstance().quit();
         glfwTerminate();
     }
 

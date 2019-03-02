@@ -21,5 +21,5 @@ namespace APC
         int m_width, m_height, m_channels;
     };
 
-typedef ResourcePtr<ImageResource> ImageResourcePtr;
+    typedef ResourcePtr<ImageResource> ImageResourcePtr;
 }

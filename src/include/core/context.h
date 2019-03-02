@@ -18,6 +18,7 @@ namespace APC
         virtual void holdedMove( const Coord& value ) = 0;
         virtual void drag( const Coord& value ) = 0;
         virtual void drop( const Coord& value ) = 0;
+        virtual void quit() = 0;
         void setLogFunction( std::function<void(std::stringstream&)>&& logFunction );
         template<typename Arg>
         void log( Arg arg );

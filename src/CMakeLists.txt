@@ -12,8 +12,7 @@ add_library(APC SHARED
         source/base/gl_renderer.cpp
         source/base/resource_manager.cpp
         source/base/resources/image.cpp
-        source/base/resources/gl_texture.cpp
-        include/third/stb/stb_image.h)
+        source/base/resources/gl_texture.cpp)
 
 target_include_directories(APC 
         PRIVATE ${OPENGL_INCLUDE_DIRS} 

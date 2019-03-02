@@ -19,4 +19,6 @@ namespace APC
         GLuint m_index;
         int m_width, m_height;
     };
+
+    typedef ResourcePtr<GLTextureResource> GLTextureResourcePtr;
 }

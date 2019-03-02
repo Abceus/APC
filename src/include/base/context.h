@@ -25,6 +25,7 @@ namespace APC
         void holdedMove( const Coord& value ) override;
         void drag( const Coord& value ) override;
         void drop( const Coord& value ) override;
+        void quit() override;
     private:
         Context() = default;
         std::unique_ptr<IRenderer> m_renderer;
