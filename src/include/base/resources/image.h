@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "base/resource_manager.h"
+#include "core/resource_manager.h"
 
 namespace APC
 {
@@ -10,7 +10,7 @@ namespace APC
     {
     public:
         ImageResource();
-        ImageResource( const std::string& path );
+        ImageResource( const std::string& path, const IFileLoader* loader );
         ~ImageResource();
         int getWidth();
         int getHeight();

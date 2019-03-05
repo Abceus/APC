@@ -1,11 +1,11 @@
 #include "test_game.h"
-#include "base/resource_manager.h"
+#include "core/resource_manager.h"
 #include "base/resources/gl_texture.h"
 
 void TestGame::init()
 {
     m_context->log( "Init" );
-    auto texture = APC::ResourcesManager::getInstance().getResource<APC::GLTextureResource>( "./resources/Law-abidingAfricanAmerican.png" );
+    auto texture = m_context->getResource<APC::GLTextureResource>( "./resources/Law-abidingAfricanAmerican.png" );
 }
 
 void TestGame::update( float dt )

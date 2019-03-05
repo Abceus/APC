@@ -5,6 +5,8 @@
 #include <memory>
 #include "core/utility.h"
 #include "core/log.h"
+#include "core/file_loader.h"
+#include "core/resource_manager.h"
 
 namespace APC
 {
@@ -21,13 +23,21 @@ namespace APC
         virtual void drag( const Coord& value ) = 0;
         virtual void drop( const Coord& value ) = 0;
         virtual void quit() = 0;
+
         template<typename LogType, typename... Args>
         void setLogImpl( Args... args );
         template<typename... Args>
         void log( Args... args );
+
+        template<typename LoaderType, typename... Args>
+        void setLoaderImpl( Args... args );
+        template<typename ResourceType>
+        ResourcePtr<ResourceType> getResource( const std::string &path );
     private:
         std::unique_ptr<ILog> m_log;
+        std::unique_ptr<IFileLoader> m_fileLoader;
     };
+
     template<typename LogType, typename... Args>
     void IContext::setLogImpl(Args... args)
     {
@@ -43,5 +53,22 @@ namespace APC
             ( ( ss << args << " " ), ... );
             m_log->print( ss );
         }
+    }
+
+    template<typename LoaderType, typename... Args>
+    void IContext::setLoaderImpl(Args... args)
+    {
+        m_fileLoader = std::make_unique<LoaderType>( args... );
+    }
+
+    template<typename ResourceType>
+    ResourcePtr<ResourceType> IContext::getResource( const std::string &path )
+    {
+        if( m_fileLoader )
+        {
+            static ResourceManager<ResourceType> rm;
+            return rm.getResource( path, m_fileLoader.get() );
+        }
+        return ResourcePtr<ResourceType>();
     }
 }

@@ -14,13 +14,14 @@ namespace APC
     {
     }
 
-    ImageResource::ImageResource( const std::string& path )
+    ImageResource::ImageResource( const std::string& path, const IFileLoader* loader )
         : m_data( nullptr )
         , m_width( 0 )
         , m_height( 0 )
         , m_channels( 0 )
     {
-        m_data = stbi_load(path.c_str(), &m_width, &m_height, &m_channels, STBI_rgb_alpha);
+        auto data = loader->load( path );
+        m_data = stbi_load_from_memory(data.data(), static_cast<int>(data.size()), &m_width, &m_height, &m_channels, STBI_rgb_alpha);
     }
 
     ImageResource::~ImageResource()

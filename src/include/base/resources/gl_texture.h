@@ -3,7 +3,7 @@
 #include <string>
 
 #include "base/gl.h"
-#include "base/resource_manager.h"
+#include "core/resource_manager.h"
 #include "base/resources/image.h"
 
 namespace APC
@@ -12,7 +12,7 @@ namespace APC
     {
     public:
         GLTextureResource();
-        GLTextureResource( const std::string& path );
+        GLTextureResource( const std::string& path, const IFileLoader* loader );
         ~GLTextureResource();
         GLuint getIndex();
     private:

@@ -4,6 +4,8 @@
 #include <map>
 #include <functional>
 
+#include "core/file_loader.h"
+
 namespace APC
 {
     template<typename ResourceType>
@@ -11,7 +13,7 @@ namespace APC
     {
     public:
         ResourcePtr();
-        ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path );
+        ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path, const IFileLoader* loader );
         ResourcePtr( const ResourcePtr& copy );
         ResourcePtr( ResourcePtr&& copy ) noexcept;
         ~ResourcePtr();
@@ -31,34 +33,22 @@ namespace APC
     class ResourceManager
     {
     public:
-        ResourcePtr<ResourceType> getResource( const std::string& path );
+        ResourcePtr<ResourceType> getResource( const std::string& path, const IFileLoader* loader );
     private:
         std::map<std::string, ResourcePtr<ResourceType>> m_resources;
-    };
-
-    class ResourcesManager
-    {
-    public:
-        template<typename ResourceType>
-        ResourcePtr<ResourceType> getResource( const std::string &path );
-        ResourcesManager(ResourcesManager const&) = delete;
-        void operator=(ResourcesManager const&) = delete;
-        static ResourcesManager& getInstance();
-    private:
-        ResourcesManager() = default;
     };
 
     // Implementation
     template<typename ResourceType>
     ResourcePtr<ResourceType>::ResourcePtr()
-        : m_value(nullptr)
-        , m_count(nullptr)
+        : m_value(new ResourceType())
+        , m_count(new long(1))
     {
     }
 
     template<typename ResourceType>
-    ResourcePtr<ResourceType>::ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path )
-            : m_value(new ResourceType( path ))
+    ResourcePtr<ResourceType>::ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path, const IFileLoader* loader )
+            : m_value(new ResourceType( path, loader ))
             , m_count(new long(1))
             , m_removeSignal(std::move(slot))
             , m_moved(false)
@@ -146,21 +136,14 @@ namespace APC
     }
 
     template<typename ResourceType>
-    ResourcePtr<ResourceType> ResourceManager<ResourceType>::getResource( const std::string &path )
+    ResourcePtr<ResourceType> ResourceManager<ResourceType>::getResource( const std::string &path, const IFileLoader* loader )
     {
         auto found = m_resources.find(path);
         if(found == m_resources.end())
         {
-            m_resources.emplace(path, ResourcePtr<ResourceType>( [this]( const std::string& path ){ this->m_resources.erase(path); }, path ));
+            m_resources.emplace(path, ResourcePtr<ResourceType>( [this]( const std::string& path ){ this->m_resources.erase(path); }, path, loader ));
             found = m_resources.find(path);
         }
         return found->second;
-    }
-
-    template<typename ResourceType>
-    ResourcePtr<ResourceType> ResourcesManager::getResource( const std::string &path )
-    {
-        static ResourceManager<ResourceType> rm;
-        return rm.getResource( path );
     }
 }

@@ -1,8 +1,11 @@
 #include <iostream>
+#include <fstream>
+
 #include "test_game.h"
 #include "base/context.h"
 #include "base/gl_renderer.h"
 #include "core/log.h"
+#include "core/file_loader.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -17,6 +20,21 @@ public:
     void print( const std::stringstream &stream ) override
     {
         std::cout << stream.str() << std::endl;
+    }
+};
+
+class PCFileLoader : public APC::IFileLoader
+{
+public:
+    std::vector<unsigned char> load( const std::string &path ) const override
+    {
+        std::ifstream file(path, std::ios::binary | std::ios::ate);
+        std::streamsize size = file.tellg();
+        file.seekg(0, std::ios::beg);
+
+        std::vector<unsigned char> buffer(size);
+        file.read( reinterpret_cast<char*>(buffer.data()), size);
+        return buffer;
     }
 };
 
@@ -57,8 +75,9 @@ public:
 
         glfwGetFramebufferSize(window, &width, &height);
 
-        APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
         APC::Context::getInstance().setLogImpl<PCLog>();
+        APC::Context::getInstance().setLoaderImpl<PCFileLoader>();
+        APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
     }
     void run()
     {

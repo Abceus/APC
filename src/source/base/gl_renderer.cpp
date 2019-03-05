@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "base/gl.h"
+#include "base/context.h"
 
 namespace APC
 {
@@ -10,7 +11,7 @@ namespace APC
         glEnable(GL_BLEND);
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA );
         glViewport(0, 0, w, h);
-        m_texture = APC::ResourcesManager::getInstance().getResource<APC::GLTextureResource>( "./resources/Law-abidingAfricanAmerican.png" );
+        m_texture = APC::Context::getInstance().getResource<APC::GLTextureResource>( "./resources/Law-abidingAfricanAmerican.png" );
 
         const GLchar* fragmentShaderSource = "#version 330 core\n"
                                            "in vec3 ourColor;\n"

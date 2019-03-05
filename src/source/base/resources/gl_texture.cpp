@@ -1,4 +1,5 @@
 #include "base/resources/gl_texture.h"
+#include "base/context.h"
 
 namespace APC
 {
@@ -8,12 +9,12 @@ namespace APC
             , m_height( 0 )
     {
     }
-    GLTextureResource::GLTextureResource( const std::string& path )
+    GLTextureResource::GLTextureResource( const std::string& path, const IFileLoader* loader )
      : m_index( 0 )
      , m_width( 0 )
      , m_height( 0 )
     {
-        auto image = ResourcesManager::getInstance().getResource<ImageResource>( path );
+        auto image = Context::getInstance().getResource<ImageResource>( path );
         glGenTextures( 1, &m_index );
 
         glBindTexture( GL_TEXTURE_2D, m_index );

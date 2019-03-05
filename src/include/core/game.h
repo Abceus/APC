@@ -21,9 +21,4 @@ namespace APC
     protected:
         IContext* m_context;
     };
-
-    void IGame::setContext(APC::IContext *context)
-    {
-        m_context = context;
-    }
 }

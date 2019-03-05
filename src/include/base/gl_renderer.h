@@ -1,7 +1,7 @@
 #pragma once
 #include "core/renderer.h"
 
-#include "base/resource_manager.h"
+#include "core/resource_manager.h"
 #include "base/resources/gl_texture.h"
 
 namespace APC
