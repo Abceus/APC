@@ -2,7 +2,9 @@
 
 #include <functional>
 #include <sstream>
+#include <memory>
 #include "core/utility.h"
+#include "core/log.h"
 
 namespace APC
 {
@@ -19,40 +21,27 @@ namespace APC
         virtual void drag( const Coord& value ) = 0;
         virtual void drop( const Coord& value ) = 0;
         virtual void quit() = 0;
-        void setLogFunction( std::function<void(std::stringstream&)>&& logFunction );
-        template<typename Arg>
-        void log( Arg arg );
-        template<typename Arg, typename... Args>
-        void log( Arg arg, Args... args );
+        template<typename LogType, typename... Args>
+        void setLogImpl( Args... args );
+        template<typename... Args>
+        void log( Args... args );
     private:
-        std::function<void(std::stringstream&)> m_logFunction;
+        std::unique_ptr<ILog> m_log;
     };
-
-    void IContext::setLogFunction( std::function<void(std::stringstream&)>&& logFunction )
+    template<typename LogType, typename... Args>
+    void IContext::setLogImpl(Args... args)
     {
-        m_logFunction = std::move( logFunction );
+        m_log = std::make_unique<LogType>( args... );
     }
 
-    template<typename Arg>
-    void IContext::log( Arg arg )
+    template<typename... Args>
+    void IContext::log( Args... args )
     {
-        if( m_logFunction )
+        if( m_log )
         {
             std::stringstream ss;
-            ss << arg << std::endl;
-            m_logFunction( ss );
-        }
-    }
-
-    template<typename Arg, typename... Args>
-    void IContext::log( Arg arg, Args... args )
-    {
-        if( m_logFunction )
-        {
-            std::stringstream ss;
-            ss << arg << " ";
-            m_logFunction( ss );
-            log( args... );
+            ( ( ss << args << " " ), ... );
+            m_log->print( ss );
         }
     }
 }

@@ -2,6 +2,7 @@
 #include "test_game.h"
 #include "base/context.h"
 #include "base/gl_renderer.h"
+#include "core/log.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -9,6 +10,15 @@
 #include <functional>
 
 const GLuint WIDTH = 800, HEIGHT = 600;
+
+class PCLog : public APC::ILog
+{
+public:
+    void print( const std::stringstream &stream ) override
+    {
+        std::cout << stream.str() << std::endl;
+    }
+};
 
 class PC
 {
@@ -22,7 +32,7 @@ public:
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "APC", nullptr, nullptr);
         if (window == nullptr)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -48,7 +58,7 @@ public:
         glfwGetFramebufferSize(window, &width, &height);
 
         APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
-        APC::Context::getInstance().setLogFunction( [&](std::stringstream& ss){ std::cout << ss.str(); });
+        APC::Context::getInstance().setLogImpl<PCLog>();
     }
     void run()
     {

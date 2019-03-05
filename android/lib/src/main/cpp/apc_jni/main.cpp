@@ -20,12 +20,13 @@
 #include <android/log.h>
 #include <string>
 #include "core/game.h"
+#include "core/log.h"
 #include "base/context.h"
 #include "base/gl_renderer.h"
 #include "test_game.h"
 
 #define LOGI(...) \
-  ((void)__android_log_print(ANDROID_LOG_INFO, "hello-libs::", __VA_ARGS__))
+  ((void)__android_log_print(ANDROID_LOG_INFO, "APC::", __VA_ARGS__))
 
 /* This is a trivial JNI example where we use a native method
  * to return a new VM String. See the corresponding Java source
@@ -36,10 +37,19 @@
 
 const int WIDTH = 800, HEIGHT = 600;
 
+class AndroidLog : public APC::ILog
+{
+public:
+    void print( const std::stringstream& stream )
+    {
+        LOGI( "%s", ss.str().c_str() );
+    }
+};
+
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz) {
   APC::Context::getInstance().init<APC::GLRenderer, TestGame>(WIDTH, HEIGHT);
-  APC::Context::getInstance().setLogFunction( [&](std::stringstream& ss){ LOGI( "%s", ss.str().c_str() ); });
+  APC::Context::getInstance().setLogImpl<AndroidLog>();
 }
 
 extern "C" JNIEXPORT void JNICALL

@@ -20,25 +20,25 @@ void TestGame::zoom( float delta )
 
 void TestGame::button( const APC::Coord& value )
 {
-    m_context->log( "Button", value.x, " ", value.y );
+    m_context->log( "Button", value.x, value.y );
 }
 
 void TestGame::altButton( const APC::Coord& value )
 {
-    m_context->log( "Alt button", value.x, " ", value.y );
+    m_context->log( "Alt button", value.x, value.y );
 }
 
 void TestGame::holdedMove( const APC::Coord &value )
 {
-    m_context->log( "Holded move", value.x, " ", value.y );
+    m_context->log( "Holded move", value.x, value.y );
 }
 
 void TestGame::drag( const APC::Coord &value )
 {
-    m_context->log( "Drag", value.x, " ", value.y );
+    m_context->log( "Drag", value.x, value.y );
 }
 
 void TestGame::drop( const APC::Coord &value )
 {
-    m_context->log( "Drop", value.x, " ", value.y );
+    m_context->log( "Drop", value.x, value.y );
 }
