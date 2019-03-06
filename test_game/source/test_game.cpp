@@ -5,7 +5,7 @@
 void TestGame::init()
 {
     m_context->log( "Init" );
-    auto texture = m_context->getResource<APC::GLTextureResource>( "./resources/Law-abidingAfricanAmerican.png" );
+    auto texture = m_context->getResource<APC::GLTextureResource>( "Law-abidingAfricanAmerican.png" );
 }
 
 void TestGame::update( float dt )

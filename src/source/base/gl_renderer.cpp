@@ -9,9 +9,9 @@ namespace APC
     void GLRenderer::init(int w, int h)
     {
         glEnable(GL_BLEND);
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC1_ALPHA );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glViewport(0, 0, w, h);
-        m_texture = APC::Context::getInstance().getResource<APC::GLTextureResource>( "./resources/Law-abidingAfricanAmerican.png" );
+        m_texture = APC::Context::getInstance().getResource<APC::GLTextureResource>( "Law-abidingAfricanAmerican.png" );
 
         const GLchar* fragmentShaderSource = "#version 330 core\n"
                                            "in vec3 ourColor;\n"

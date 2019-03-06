@@ -19,7 +19,7 @@ target_include_directories(APC
         PUBLIC include)
 
 if(DEFINED GLES2)
-    target_link_libraries(APC EGL GLESv2)
+    target_link_libraries(APC GLESv3)
 else()
     find_package(OpenGL REQUIRED)
     target_link_libraries(APC ${OPENGL_LIBRARIES})

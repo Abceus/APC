@@ -18,9 +18,11 @@
 #include <jni.h>
 #include <cinttypes>
 #include <android/log.h>
+#include <android/asset_manager_jni.h>
 #include <string>
 #include "core/game.h"
 #include "core/log.h"
+#include "core/file_loader.h"
 #include "base/context.h"
 #include "base/gl_renderer.h"
 #include "test_game.h"
@@ -42,14 +44,49 @@ class AndroidLog : public APC::ILog
 public:
     void print( const std::stringstream& stream )
     {
-        LOGI( "%s", ss.str().c_str() );
+        LOGI( "%s", stream.str().c_str() );
     }
 };
 
+class AndroidFileLoader : public APC::IFileLoader
+{
+public:
+    AndroidFileLoader(AAssetManager *assetManager)
+        : m_assetManager(assetManager)
+    {
+    }
+    std::vector<unsigned char> load( const std::string &path ) const override
+    {
+        std::vector<unsigned char> data;
+        LOGI( "%s", path.c_str() );
+        LOGI( "%p", m_assetManager );
+        AAsset *vertexShaderAsset = AAssetManager_open(m_assetManager, path.c_str(), AASSET_MODE_BUFFER);
+        if(vertexShaderAsset == nullptr)
+        {
+            return data;
+        }
+        const void *vertexShaderBuf = AAsset_getBuffer(vertexShaderAsset);
+        if(vertexShaderBuf == nullptr)
+        {
+            return data;
+        }
+        off_t vertexShaderLength = AAsset_getLength(vertexShaderAsset);
+        data.resize(vertexShaderLength);
+        memcpy(data.data(), vertexShaderBuf, vertexShaderLength);
+        AAsset_close(vertexShaderAsset);
+        return data;
+    }
+private:
+    AAssetManager *m_assetManager;
+};
+
 extern "C" JNIEXPORT void JNICALL
-Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz) {
-  APC::Context::getInstance().init<APC::GLRenderer, TestGame>(WIDTH, HEIGHT);
+Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject assetManager) {
   APC::Context::getInstance().setLogImpl<AndroidLog>();
+  AAssetManager *nativeAssetManager = AAssetManager_fromJava(env, assetManager);
+  LOGI( "%p", nativeAssetManager );
+  APC::Context::getInstance().setLoaderImpl<AndroidFileLoader>(nativeAssetManager);
+  APC::Context::getInstance().init<APC::GLRenderer, TestGame>(WIDTH, HEIGHT);
 }
 
 extern "C" JNIEXPORT void JNICALL

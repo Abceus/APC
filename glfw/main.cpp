@@ -28,13 +28,17 @@ class PCFileLoader : public APC::IFileLoader
 public:
     std::vector<unsigned char> load( const std::string &path ) const override
     {
-        std::ifstream file(path, std::ios::binary | std::ios::ate);
-        std::streamsize size = file.tellg();
-        file.seekg(0, std::ios::beg);
+        std::ifstream file( "./resources/" + path, std::ios::binary | std::ios::ate);
+        if( file )
+        {
+            std::streamsize size = file.tellg();
+            file.seekg( 0, std::ios::beg );
 
-        std::vector<unsigned char> buffer(size);
-        file.read( reinterpret_cast<char*>(buffer.data()), size);
-        return buffer;
+            std::vector<unsigned char> buffer( size );
+            file.read( reinterpret_cast<char *>(buffer.data()), size );
+            return buffer;
+        }
+        return std::vector<unsigned char>();
     }
 };
 

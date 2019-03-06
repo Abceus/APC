@@ -104,7 +104,7 @@ class GL2JNIView extends GLSurfaceView {
                              new ConfigChooser(5, 6, 5, 0, depth, stencil) );
 
         /* Set the renderer responsible for frame rendering */
-        setRenderer(new Renderer());
+        setRenderer(new Renderer(getContext()));
     }
 
     private static class ContextFactory implements GLSurfaceView.EGLContextFactory {
@@ -324,6 +324,10 @@ class GL2JNIView extends GLSurfaceView {
     }
     private static class Renderer implements GLSurfaceView.Renderer {
         long lastFrame;
+        Context m_context;
+        public Renderer(Context context) {
+            m_context = context;
+        }
         public void onDrawFrame(GL10 gl) {
             long currentFrame = System.currentTimeMillis();
             long deltaTime = currentFrame - lastFrame;
@@ -333,7 +337,7 @@ class GL2JNIView extends GLSurfaceView {
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            APCLib.init();
+            APCLib.init(m_context.getAssets());
             lastFrame = System.currentTimeMillis();
         }
 
