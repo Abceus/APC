@@ -58,8 +58,6 @@ public:
     std::vector<unsigned char> load( const std::string &path ) const override
     {
         std::vector<unsigned char> data;
-        LOGI( "%s", path.c_str() );
-        LOGI( "%p", m_assetManager );
         AAsset *vertexShaderAsset = AAssetManager_open(m_assetManager, path.c_str(), AASSET_MODE_BUFFER);
         if(vertexShaderAsset == nullptr)
         {
@@ -81,12 +79,11 @@ private:
 };
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject assetManager) {
+Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject assetManager, jint width, jint height) {
   APC::Context::getInstance().setLogImpl<AndroidLog>();
   AAssetManager *nativeAssetManager = AAssetManager_fromJava(env, assetManager);
-  LOGI( "%p", nativeAssetManager );
   APC::Context::getInstance().setLoaderImpl<AndroidFileLoader>(nativeAssetManager);
-  APC::Context::getInstance().init<APC::GLRenderer, TestGame>(WIDTH, HEIGHT);
+  APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
 }
 
 extern "C" JNIEXPORT void JNICALL
