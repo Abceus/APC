@@ -325,6 +325,7 @@ class GL2JNIView extends GLSurfaceView {
     private static class Renderer implements GLSurfaceView.Renderer {
         long lastFrame;
         Context m_context;
+        int m_width, m_height;
         public Renderer(Context context) {
             m_context = context;
         }
@@ -337,7 +338,7 @@ class GL2JNIView extends GLSurfaceView {
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            APCLib.init(m_context.getAssets());
+            APCLib.init(m_context.getAssets(), width, height);
             lastFrame = System.currentTimeMillis();
         }
 

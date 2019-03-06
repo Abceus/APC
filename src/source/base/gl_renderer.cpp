@@ -6,8 +6,16 @@
 
 namespace APC
 {
+    GLRenderer::GLRenderer()
+        : m_height( 0 )
+        , m_width( 0 )
+    {
+    }
+
     void GLRenderer::init(int w, int h)
     {
+        m_width = w;
+        m_height = h;
         glEnable(GL_BLEND);
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glViewport(0, 0, w, h);
@@ -143,5 +151,15 @@ namespace APC
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
         glDeleteBuffers(1, &EBO);
+    }
+
+    int GLRenderer::getWidth()
+    {
+        return m_width;
+    }
+
+    int GLRenderer::getHeigth()
+    {
+        return m_height;
     }
 }

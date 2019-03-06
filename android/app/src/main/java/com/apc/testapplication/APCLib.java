@@ -25,7 +25,7 @@ public class APCLib {
          System.loadLibrary("apc_jni");
      }
 
-     public static native void init(AssetManager assetManager);
+     public static native void init(AssetManager assetManager, int width, int height);
      public static native void draw();
      public static native void update( float dt );
      public static native void button( int x, int y );
