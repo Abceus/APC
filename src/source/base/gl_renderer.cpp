@@ -21,6 +21,30 @@ namespace APC
         glViewport(0, 0, w, h);
         m_texture = APC::Context::getInstance().getResource<APC::GLTextureResource>( "Law-abidingAfricanAmerican.png" );
 
+#ifdef GLES2
+        const GLchar* fragmentShaderSource = "#version 300 es\n"
+                                           "precision mediump float;\n"
+                                           "in vec3 ourColor;\n"
+                                           "in vec2 TexCoord;\n"
+                                           "out vec4 color;\n"
+                                           "uniform sampler2D ourTexture;\n"
+                                           "void main()\n"
+                                           "{\n"
+                                           "color = texture(ourTexture, TexCoord);\n"
+                                           "}\0\n";
+        const GLchar* vertexShaderSource = "#version 300 es\n"
+                                            "layout (location = 0) in vec3 position;\n"
+                                            "layout (location = 1) in vec3 color;\n"
+                                            "layout (location = 2) in vec2 texCoord;\n"
+                                            "out vec3 ourColor;\n"
+                                            "out vec2 TexCoord;\n"
+                                            "void main()\n"
+                                            "{\n"
+                                            "gl_Position = vec4(position, 1.0f);\n"
+                                            "ourColor = color;\n"
+                                            "TexCoord = texCoord;\n"
+                                            "}\0";
+#else
         const GLchar* fragmentShaderSource = "#version 330 core\n"
                                            "in vec3 ourColor;\n"
                                            "in vec2 TexCoord;\n"
@@ -42,6 +66,7 @@ namespace APC
                                              "ourColor = color;\n"
                                              "TexCoord = texCoord;\n"
                                              "}\0";
+#endif
 
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
@@ -55,7 +80,8 @@ namespace APC
         if (!success)
         {
             glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-            std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+            APC::Context::getInstance().log( "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" );
+            APC::Context::getInstance().log( infoLog );
         }
 
         GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -67,7 +93,8 @@ namespace APC
         if (!success)
         {
             glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-            std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+            APC::Context::getInstance().log( "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" );
+            APC::Context::getInstance().log( infoLog );
         }
 
         shaderProgram = glCreateProgram();
@@ -78,7 +105,8 @@ namespace APC
         glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-            std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+            APC::Context::getInstance().log( "ERROR::SHADER::shaderProgram::LINKING_FAILED\n" );
+            APC::Context::getInstance().log( infoLog );
         }
 
         glDeleteShader(vertexShader);
@@ -100,7 +128,7 @@ namespace APC
                 -1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 0.0f  // Top Left
         };
 
-        GLuint indices[] = {  // Note that we start from 0!
+        GLshort indices[] = {  // Note that we start from 0!
                 0, 1, 3, // First Triangle
                 1, 2, 3  // Second Triangle
         };
@@ -142,7 +170,7 @@ namespace APC
         glBindTexture(GL_TEXTURE_2D, m_texture->getIndex() );
 //        glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), m_texture->getIndex() );
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
         glBindVertexArray(0);
     }
 
