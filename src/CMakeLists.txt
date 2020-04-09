@@ -12,7 +12,13 @@ add_library(APC SHARED
         source/base/gl_renderer.cpp
         source/base/resources/image.cpp
         source/base/resources/gl_texture.cpp
-        source/core/game.cpp)
+        source/base/drawable_impl.cpp
+        source/base/transform_impl.cpp
+        source/base/sprite.cpp
+        source/base/scene.cpp
+        source/base/scene_manager_impl.cpp
+        source/core/game.cpp
+        source/core/render_node.cpp)
 
 target_include_directories(APC 
         PRIVATE ${OPENGL_INCLUDE_DIRS} 

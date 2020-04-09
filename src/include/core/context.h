@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "core/file_loader.h"
 #include "core/resource_manager.h"
+#include "core/scene_manager.h"
 
 namespace APC
 {
@@ -23,6 +24,8 @@ namespace APC
         virtual void drag( const Coord& value ) = 0;
         virtual void drop( const Coord& value ) = 0;
         virtual void quit() = 0;
+
+        virtual ISceneManager* getSceneManager() = 0;
 
         template<typename LogType, typename... Args>
         void setLogImpl( Args... args );

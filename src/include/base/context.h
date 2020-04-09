@@ -5,6 +5,7 @@
 #include "core/context.h"
 #include "core/renderer.h"
 #include "core/game.h"
+#include "base/scene_manager_impl.h"
 
 namespace APC
 {
@@ -26,10 +27,13 @@ namespace APC
         void drag( const Coord& value ) override;
         void drop( const Coord& value ) override;
         void quit() override;
+        ISceneManager* getSceneManager() override;
+        Coord getScreenSize();
     private:
         Context() = default;
         std::unique_ptr<IRenderer> m_renderer;
         std::unique_ptr<IGame> m_game;
+        std::unique_ptr<ISceneManager> m_sceneManager;
     };
 
     template<typename RendererClass, typename GameClass>

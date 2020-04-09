@@ -45,8 +45,18 @@ namespace APC
         glDeleteTextures( 1, &m_index );
     }
 
-    GLuint GLTextureResource::getIndex()
+    GLuint GLTextureResource::getIndex() const
     {
         return m_index;
+    }
+
+    int GLTextureResource::getHeight() const
+    {
+        return m_height;
+    }
+
+    int GLTextureResource::getWidth() const
+    {
+        return m_width;
     }
 }

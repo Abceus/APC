@@ -14,7 +14,9 @@ namespace APC
         GLTextureResource();
         GLTextureResource( const std::string& path, const IFileLoader* loader );
         ~GLTextureResource();
-        GLuint getIndex();
+        GLuint getIndex() const;
+        int getHeight() const;
+        int getWidth() const;
     private:
         GLuint m_index;
         int m_width, m_height;
