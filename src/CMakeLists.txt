@@ -30,3 +30,7 @@ else()
     find_package(OpenGL REQUIRED)
     target_link_libraries(APC ${OPENGL_LIBRARIES})
 endif()
+
+add_subdirectory(third/glm)
+
+target_link_libraries(APC glm)
