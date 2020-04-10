@@ -7,37 +7,63 @@ namespace APC
         m_parent = parent;
     }
 
-    Coord RenderNode::getPosition() const
+    FCoord RenderNode::getPosition() const
     {
         if(m_parent)
         {
-            if(m_transform)
+            if(m_position)
             {
-                return m_parent->getPosition() + m_transform->getPosition();
+                return m_parent->getPosition() + m_position->get();
             }
             return m_parent->getPosition();
         }
-        if(m_transform)
+        if(m_position)
         {
-            return m_transform->getPosition();
+            return m_position->get();
         }
-        return {0, 0};
+        return FCoord();
+    }
+
+    Color RenderNode::getColor() const
+    {
+        if(m_parent)
+        {
+            if(m_color)
+            {
+                return m_parent->getColor() * m_color->get();
+            }
+            return m_parent->getColor();
+        }
+        if(m_color)
+        {
+            return m_color->get();
+        }
+        return Color();
     }
 
     glm::mat4 RenderNode::getMatrix() const
     {
+        glm::mat4 result(1.0);
+
         if(m_parent)
         {
-            if(m_transform)
-            {
-                return m_parent->getMatrix() * m_transform->getMatrix();
-            }
-            return m_parent->getMatrix();
+            result = m_parent->getMatrix();
         }
-        if(m_transform)
+
+        if(m_position)
         {
-            return m_transform->getMatrix();
+            result *= m_position->getMatrix();
         }
-        return glm::mat4(1.0);
+
+        if(m_rotation)
+        {
+            result *= m_rotation->getMatrix();
+        }
+
+        if(m_scale)
+        {
+            result *= m_scale->getMatrix();
+        }
+        return result;
     }
 }

@@ -26,10 +26,14 @@ namespace APC
                 if(drawable->enabled())
                 {
                     GLuint transformLoc = glGetUniformLocation(shaderProgram, "transform");
-                    const float aspect = Context::getInstance().getScreenSize().x/Context::getInstance().getScreenSize().y;
-                    auto trans = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -1.0f, 1.0f);
-                    // auto trans = glm::ortho(0.0f, 1.0f * aspect, 1.0f * aspect, 0.0f, -1.0f, 1.0f);
+                    const float aspect = Context::getInstance().getScreenSize().x/static_cast<float>(Context::getInstance().getScreenSize().y);
+                    auto trans = glm::ortho(0.0f, aspect, 1.0f, 0.0f, -1.0f, 1.0f);
                     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans * drawable->getRenderNode()->getMatrix()));
+
+                    GLuint colorLocation = glGetUniformLocation(shaderProgram, "colorFactor");
+                    auto color = drawable->getRenderNode()->getColor();
+                    glm::vec4 glmColor(color.r, color.g, color.b, color.a);
+                    glUniform4fv(colorLocation, 1, glm::value_ptr(glmColor));
                     drawable->draw();
                 }
             }

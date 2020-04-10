@@ -27,6 +27,7 @@ namespace APC
                                            "in vec2 TexCoord;\n"
                                            "out vec4 color;\n"
                                            "uniform sampler2D ourTexture;\n"
+                                           "uniform vec3 ourColor;\n"
                                            "void main()\n"
                                            "{\n"
                                                 "color = texture(ourTexture, TexCoord);\n"
@@ -34,9 +35,7 @@ namespace APC
 
         const GLchar* vertexShaderSource = "#version 300 es\n"
                                             "layout (location = 0) in vec3 position;\n"
-                                            "layout (location = 1) in vec3 color;\n"
-                                            "layout (location = 2) in vec2 texCoord;\n"
-                                            "out vec3 ourColor;\n"
+                                            "layout (location = 1) in vec2 texCoord;\n"
                                             "out vec2 TexCoord;\n"
                                             "uniform mat4 transform;\n"
                                             "void main()\n"
@@ -47,26 +46,23 @@ namespace APC
                                             "}\0";
 #else
         const GLchar* fragmentShaderSource = "#version 330 core\n"
-                                           "in vec3 ourColor;\n"
                                            "in vec2 TexCoord;\n"
                                            "out vec4 color;\n"
-                                           "uniform sampler2D ourTexture;\n"
+                                           "uniform sampler2D mainTexture;\n"
+                                           "uniform vec4 colorFactor;\n"
                                            "void main()\n"
                                            "{\n"
-                                                "color = texture(ourTexture, TexCoord);\n"
+                                                "color = texture(mainTexture, TexCoord) * colorFactor;\n"
                                            "}\0\n";
 
         const GLchar* vertexShaderSource =  "#version 330 core\n"
                                              "layout (location = 0) in vec3 position;\n"
-                                             "layout (location = 1) in vec3 color;\n"
-                                             "layout (location = 2) in vec2 texCoord;\n"
-                                             "out vec3 ourColor;\n"
+                                             "layout (location = 1) in vec2 texCoord;\n"
                                              "out vec2 TexCoord;\n"
                                              "uniform mat4 transform;\n"
                                              "void main()\n"
                                              "{\n"
                                                 "gl_Position = transform * vec4(position, 1.0f);\n"
-                                                "ourColor = color;\n"
                                                 "TexCoord = texCoord;\n"
                                              "}\0";
 #endif

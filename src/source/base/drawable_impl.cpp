@@ -2,16 +2,6 @@
 
 namespace APC
 {
-    // void Drawable::setTransform(std::shared_ptr<ITransform> transform)
-    // {
-    //     m_transform = transform;
-    // }
-
-    // std::shared_ptr<ITransform> Drawable::getTransform() const
-    // {
-    //     return m_transform;
-    // }
-
     void Drawable::setRenderNode(std::shared_ptr<RenderNode> renderNode)
     {
         m_renderNode = renderNode;
