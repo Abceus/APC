@@ -21,6 +21,7 @@ namespace APC
         operator bool() const;
         ResourcePtr<ResourceType>& operator=(ResourcePtr<ResourceType> const&);
         ResourcePtr<ResourceType>& operator=(ResourcePtr<ResourceType>&&);
+        void removeSignalDisable();
     private:
         ResourceType* m_value;
         long* m_count;
@@ -34,6 +35,7 @@ namespace APC
     {
     public:
         ResourcePtr<ResourceType> getResource( const std::string& path, const IFileLoader* loader );
+        ~ResourceManager();
     private:
         std::map<std::string, ResourcePtr<ResourceType>> m_resources;
     };
@@ -87,7 +89,10 @@ namespace APC
             (*m_count)--;
             if ( *m_count == 1 )
             {
-                m_removeSignal(m_path);
+                if(m_removeSignal)
+                {
+                    m_removeSignal(m_path);
+                }
             } else if ( *m_count == 0 )
             {
                 if(m_value)
@@ -136,14 +141,29 @@ namespace APC
     }
 
     template<typename ResourceType>
+    void ResourcePtr<ResourceType>::removeSignalDisable()
+    {
+        m_removeSignal = nullptr;
+    }
+
+    template<typename ResourceType>
     ResourcePtr<ResourceType> ResourceManager<ResourceType>::getResource( const std::string &path, const IFileLoader* loader )
     {
         auto found = m_resources.find(path);
         if(found == m_resources.end())
         {
-            m_resources.emplace(path, ResourcePtr<ResourceType>( [this]( const std::string& path ){ this->m_resources.erase(path); }, path, loader ));
+            m_resources.emplace(path, ResourcePtr<ResourceType>( [this]( const std::string& path ){ m_resources.erase(path); }, path, loader ));
             found = m_resources.find(path);
         }
         return found->second;
+    }
+
+    template<typename ResourceType>
+    ResourceManager<ResourceType>::~ResourceManager()
+    {
+        for(auto& resource : m_resources)
+        {
+            resource.second.removeSignalDisable();
+        }
     }
 }
