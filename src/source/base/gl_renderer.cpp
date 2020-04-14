@@ -27,15 +27,14 @@ namespace APC
 #ifdef GLES2
         const GLchar* fragmentShaderSource = "#version 300 es\n"
                                            "precision mediump float;\n"
-                                           "in vec3 ourColor;\n"
                                            "in vec2 TexCoord;\n"
                                            "out vec4 color;\n"
-                                           "uniform sampler2D ourTexture;\n"
-                                           "uniform vec3 ourColor;\n"
+                                           "uniform sampler2D mainTexture;\n"
+                                           "uniform vec4 colorFactor;\n"
                                            "void main()\n"
                                            "{\n"
-                                                "color = texture(ourTexture, TexCoord);\n"
-                                           "}\0\n";
+                                                "color = texture(mainTexture, TexCoord) * colorFactor;\n"
+                                           "}\0";
 
         const GLchar* vertexShaderSource = "#version 300 es\n"
                                             "layout (location = 0) in vec3 position;\n"
@@ -45,7 +44,6 @@ namespace APC
                                             "void main()\n"
                                             "{\n"
                                                 "gl_Position = transform * vec4(position, 1.0f);\n"
-                                                "ourColor = color;\n"
                                                 "TexCoord = texCoord;\n"
                                             "}\0";
 #else
@@ -57,7 +55,7 @@ namespace APC
                                            "void main()\n"
                                            "{\n"
                                                 "color = texture(mainTexture, TexCoord) * colorFactor;\n"
-                                           "}\0\n";
+                                           "}\0";
 
         const GLchar* vertexShaderSource =  "#version 330 core\n"
                                              "layout (location = 0) in vec3 position;\n"
