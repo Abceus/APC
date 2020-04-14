@@ -80,48 +80,48 @@ private:
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject assetManager, jint width, jint height) {
-  APC::Context::getInstance().setLogImpl<AndroidLog>();
-  AAssetManager *nativeAssetManager = AAssetManager_fromJava(env, assetManager);
-  APC::Context::getInstance().setLoaderImpl<AndroidFileLoader>(nativeAssetManager);
-  APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
+    APC::Context::getInstance().setLogImpl<AndroidLog>();
+    AAssetManager *nativeAssetManager = AAssetManager_fromJava(env, assetManager);
+    APC::Context::getInstance().setLoaderImpl<AndroidFileLoader>(nativeAssetManager);
+    APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_draw(JNIEnv *env, jobject thiz) {
-APC::Context::getInstance().draw();
+    APC::Context::getInstance().draw();
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_update(JNIEnv *env, jobject thiz, jfloat dt) {
-APC::Context::getInstance().update( static_cast<float>( dt ) );
+    APC::Context::getInstance().update( static_cast<float>( dt ) );
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_button(JNIEnv *env, jobject thiz, jint x, jint y) {
-APC::Context::getInstance().button( { static_cast<int>( x ), static_cast<int>( y ) } );
+    APC::Context::getInstance().button( { static_cast<int>( x ), static_cast<int>( y ) } );
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_altButton(JNIEnv *env, jobject thiz, jint x, jint y) {
-APC::Context::getInstance().altButton( { static_cast<int>( x ), static_cast<int>( y ) } );
+    APC::Context::getInstance().altButton( { static_cast<int>( x ), static_cast<int>( y ) } );
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_holdedMove(JNIEnv *env, jobject thiz, jint x, jint y) {
-APC::Context::getInstance().holdedMove( { static_cast<int>( x ), static_cast<int>( y ) } );
+    APC::Context::getInstance().holdedMove( { static_cast<int>( x ), static_cast<int>( y ) } );
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_drag(JNIEnv *env, jobject thiz, jint x, jint y) {
-APC::Context::getInstance().drag( { static_cast<int>( x ), static_cast<int>( y ) } );
+    APC::Context::getInstance().drag( { static_cast<int>( x ), static_cast<int>( y ) } );
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_drop(JNIEnv *env, jobject thiz, jint x, jint y) {
-APC::Context::getInstance().drop( { static_cast<int>( x ), static_cast<int>( y ) } );
+    APC::Context::getInstance().drop( { static_cast<int>( x ), static_cast<int>( y ) } );
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_zoom(JNIEnv *env, jobject thiz, jfloat delta) {
-APC::Context::getInstance().zoom( static_cast<float>( delta ) );
+    APC::Context::getInstance().zoom( static_cast<float>( delta ) );
 }

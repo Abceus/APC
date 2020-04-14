@@ -24,6 +24,7 @@ namespace APC
         virtual void drag( const Coord& value ) = 0;
         virtual void drop( const Coord& value ) = 0;
         virtual void quit() = 0;
+        virtual void screenSizeChanged( const Coord& newSize ) = 0;
 
         virtual ISceneManager* getSceneManager() = 0;
 

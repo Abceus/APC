@@ -3,9 +3,10 @@
 
 #include "core/resource_manager.h"
 #include "base/resources/gl_texture.h"
-#include "core/drawable.h"
+#include "core/scene.h"
 
 #include <list>
+#include <memory>
 
 namespace APC
 {
@@ -14,7 +15,7 @@ namespace APC
     public:
         GLRenderer();
         void init(int w, int h) override;
-        void draw() override;
+        void draw(std::shared_ptr<IScene> scene) override;
         void destroy() override;
         int getWidth() override;
         int getHeight() override;

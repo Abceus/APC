@@ -1,8 +1,7 @@
 #pragma once
 
 #include <memory>
-
-#include "core/drawable.h"
+#include "core/scene.h"
 
 namespace APC
 {
@@ -10,7 +9,7 @@ namespace APC
     {
     public:
         virtual void init(int w, int h) = 0;
-        virtual void draw() = 0;
+        virtual void draw(std::shared_ptr<IScene> scene) = 0;
         virtual void destroy() = 0;
         virtual int getWidth() = 0;
         virtual int getHeight() = 0;

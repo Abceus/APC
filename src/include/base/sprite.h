@@ -1,14 +1,16 @@
 #pragma once
 
-#include "base/drawable_impl.h"
+#include "core/component.h"
+#include "core/components/drawable.h"
 #include "base/resources/gl_texture.h"
 
 namespace APC
 {
-    class Sprite : public Drawable
+    class Sprite : public Component, public IDrawable
     {
     public:
-        Sprite(GLTextureResourcePtr texture);
+        Sprite() = default;
+        void setTexture(GLTextureResourcePtr texture);
         void draw() override;
     private:
         GLTextureResourcePtr m_texture;

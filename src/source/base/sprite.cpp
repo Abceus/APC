@@ -4,9 +4,8 @@
 
 namespace APC
 {
-    Sprite::Sprite(GLTextureResourcePtr texture)
+    void Sprite::setTexture(GLTextureResourcePtr texture)
     {
-        m_enabled = true;
         m_texture = texture;
         float height = texture->getHeight() / static_cast<float>( Context::getInstance().getScreenSize().y );
         float width = texture->getWidth() / static_cast<float>( Context::getInstance().getScreenSize().x );
@@ -50,8 +49,12 @@ namespace APC
     void Sprite::draw()
     {
         glBindVertexArray(VAO);
-
-        glBindTexture(GL_TEXTURE_2D, m_texture->getIndex() );
+        GLuint texture = 0;
+        if(m_texture)
+        {
+            texture = m_texture->getIndex();
+        }
+        glBindTexture(GL_TEXTURE_2D, texture );
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 

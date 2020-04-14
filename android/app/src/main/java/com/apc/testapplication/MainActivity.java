@@ -22,6 +22,8 @@ public class MainActivity extends Activity implements OnTouchListener {
         mView = new GL2JNIView(getApplication());
         mView.setOnTouchListener(this);
         setContentView(mView);
+        // TODO: reload context
+        mView.setPreserveEGLContextOnPause(true);
     }
 
     @Override protected void onPause() {

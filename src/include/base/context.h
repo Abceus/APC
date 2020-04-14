@@ -27,6 +27,7 @@ namespace APC
         void drag( const Coord& value ) override;
         void drop( const Coord& value ) override;
         void quit() override;
+        void screenSizeChanged( const Coord& newSize ) override;
         ISceneManager* getSceneManager() override;
         Coord getScreenSize();
     private:

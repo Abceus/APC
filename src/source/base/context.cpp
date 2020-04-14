@@ -20,52 +20,71 @@ namespace APC
 
     void Context::update( float dt )
     {
-        m_game->update(dt);
+        // m_game->update(dt);
+        auto currentScene = m_sceneManager->getCurrentScene();
+        if(currentScene)
+        {
+            currentScene->update(dt);
+        }
     }
 
     void Context::draw()
     {
-        m_renderer->draw();
+        auto currentScene = m_sceneManager->getCurrentScene();
+        if(currentScene)
+        {
+            m_renderer->draw(currentScene);
+        }
     }
 
     void Context::zoom( float delta )
     {
-        m_game->zoom(delta);
+        // m_game->zoom(delta);
     }
 
     void Context::button( const Coord& value )
     {
-        m_game->button( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
-                          static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
+        auto currentScene = m_sceneManager->getCurrentScene();
+        if(currentScene)
+        {
+            currentScene->click(value);
+        }
+        // m_game->button( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
+        //                   static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
     }
 
     void Context::altButton( const Coord& value )
     {
-        m_game->altButton( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
-                             static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
+        // m_game->altButton( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
+        //                      static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
     }
 
     void Context::holdedMove( const Coord& value )
     {
-        m_game->holdedMove( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
-                              static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
+        // m_game->holdedMove( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
+        //                       static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
     }
 
     void Context::drag( const Coord& value )
     {
-        m_game->drag( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
-                        static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
+        // m_game->drag( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
+        //                 static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
     }
 
     void Context::drop( const Coord& value )
     {
-        m_game->drop( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
-                        static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
+        // m_game->drop( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
+        //                 static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );
     }
 
     void Context::quit()
     {
         m_renderer->destroy();
+    }
+
+    void Context::screenSizeChanged( const Coord& newSize )
+    {
+
     }
 
     ISceneManager* Context::getSceneManager()

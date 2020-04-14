@@ -1,8 +1,12 @@
 #include "base/gl_renderer.h"
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "base/gl.h"
 #include "base/context.h"
+#include "core/transform.h"
 
 namespace APC
 {
@@ -149,23 +153,49 @@ namespace APC
         // glBindVertexArray(0); // Unbind VAO
     }
 
-    void GLRenderer::draw()
+    void GLRenderer::draw(std::shared_ptr<IScene> scene)
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram( shaderProgram );
 
-        auto sceneManager = APC::Context::getInstance().getSceneManager();
+        auto layers = scene->getObjects();
 
-        if(sceneManager)
+        for(auto& layer: layers)
         {
-            auto scene = sceneManager->getCurrentScene();
-            if(scene)
+            for(auto& object: layer)
             {
-                scene->draw(shaderProgram);
+                // if(drawable->enabled())
+                {
+                    auto transform = object->getComponent<Transform>();
+
+                    GLuint transformLoc = glGetUniformLocation(shaderProgram, "transform");
+                    // const float aspect = m_width/static_cast<float>(m_height);
+                    // auto trans = glm::ortho(0.0f, aspect, 1.0f, 0.0f, -1.0f, 1.0f);
+                    auto trans = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -1.0f, 1.0f);
+                    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans * transform->getMatrix()));
+
+                    GLuint colorLocation = glGetUniformLocation(shaderProgram, "colorFactor");
+                    auto color = transform->getColor();
+                    glm::vec4 glmColor(color.r, color.g, color.b, color.a);
+                    glUniform4fv(colorLocation, 1, glm::value_ptr(glmColor));
+
+                    object->draw();
+                }
             }
         }
+
+        // auto sceneManager = APC::Context::getInstance().getSceneManager();
+
+        // if(sceneManager)
+        // {
+        //     auto scene = sceneManager->getCurrentScene();
+        //     if(scene)
+        //     {
+        //         scene->draw(shaderProgram);
+        //     }
+        // }
 
         // glBindVertexArray(VAO);
 

@@ -13,6 +13,6 @@ public:
     void drag( const APC::Coord& value ) override;
     void drop( const APC::Coord &value ) override;
 private:
-    std::shared_ptr<APC::RenderNode> m_testNode;
+    // std::shared_ptr<APC::RenderNode> m_testNode;
     bool m_left;
 };

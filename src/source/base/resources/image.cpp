@@ -4,6 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "third/stb/stb_image.h"
 
+
 namespace APC
 {
     ImageResource::ImageResource()
