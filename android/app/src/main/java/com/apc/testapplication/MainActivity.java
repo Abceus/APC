@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.support.v4.view.MotionEventCompat;
-import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.lang.Math;
@@ -86,6 +85,10 @@ public class MainActivity extends Activity implements OnTouchListener {
                 }
                 else
                 {
+                    if(mTouches[0][0] == x && mTouches[0][1] == y)
+                    {
+                        break;
+                    }
                     holdTimer.cancel();
                     if( !dragged )
                     {
