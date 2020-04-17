@@ -2,17 +2,15 @@
 
 namespace APC
 {
-    const int WIDTH = 800, HEIGHT = 600;
-
     Context& Context::getInstance()
     {
         static Context instance;
         return instance;
     }
 
-    void Context::init(int w, int h)
+    void Context::init()
     {
-        m_renderer->init(w, h);
+        m_renderer->init();
         m_sceneManager = std::make_unique<SceneManager>();
         m_game->setContext(this);
         m_game->init();
@@ -79,12 +77,13 @@ namespace APC
 
     void Context::quit()
     {
+        m_game->quit();
         m_renderer->destroy();
     }
 
     void Context::screenSizeChanged( const Coord& newSize )
     {
-
+        m_renderer->screenChange(newSize.x, newSize.y);
     }
 
     ISceneManager* Context::getSceneManager()
@@ -92,8 +91,18 @@ namespace APC
         return m_sceneManager.get();
     }
 
-    Coord Context::getScreenSize()
+    Coord Context::getScreenSize() const
+    {
+        return { m_gameConfig.width, m_gameConfig.height };
+    }
+
+    Coord Context::getRealScreenSize() const
     {
         return { m_renderer->getWidth(), m_renderer->getHeight() };
+    }
+
+    GameConfig Context::getGameConfig() const
+    {
+        return m_gameConfig;
     }
 }

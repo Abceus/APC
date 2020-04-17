@@ -68,8 +68,12 @@ namespace APC
             result = m_parent->getMatrix();
         }
 
-        result = glm::translate(result, glm::fvec3(m_position.x/Context::getInstance().getScreenSize().x, 
-        m_position.y/Context::getInstance().getScreenSize().y, 0.0f));
+        auto biggerSide = static_cast<float>( std::max(Context::getInstance().getScreenSize().x, Context::getInstance().getScreenSize().y) );
+
+        result = glm::translate(result, glm::fvec3(m_position.x/biggerSide, 
+        m_position.y/biggerSide, 0.0f));
+
+        // result = glm::translate(result, glm::fvec3(m_position.x, m_position.y, 0.0f));
 
         result = glm::rotate(result, glm::radians(-m_rotation), glm::fvec3(0.0f, 0.0f, 1.0f));
 

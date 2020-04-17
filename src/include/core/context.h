@@ -14,7 +14,7 @@ namespace APC
     class IContext
     {
     public:
-        virtual void init(int w, int h) = 0;
+        virtual void init() = 0;
         virtual void update( float dt ) = 0;
         virtual void draw() = 0;
         virtual void zoom( float delta ) = 0;

@@ -13,11 +13,11 @@ namespace APC
 
     void ClickableArea::screenSizeChanged(const Coord& newSize)
     {
-        
     }
 
     void ClickableArea::click( const Coord& value )
     {
+        std::cout << value.x << " " << value.y << std::endl;
         if(!m_callback)
         {
             return;

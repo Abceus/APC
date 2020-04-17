@@ -27,9 +27,11 @@ namespace APC
         template<typename T>
         std::shared_ptr<typename std::enable_if<std::is_convertible<T*, Component*>::value, T>::type> getComponent() const;
 
-        void draw();
+        // void draw();
         void update(float dt);
         void click(const Coord& coord);
+
+        std::vector<std::shared_ptr<IDrawable>> getDrawables() const;
 
     private:
         std::map<std::type_index, std::shared_ptr<Component>> m_components;

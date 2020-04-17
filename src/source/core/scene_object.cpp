@@ -3,12 +3,17 @@
 
 namespace APC
 {
-    void SceneObject::draw()
+    // void SceneObject::draw()
+    // {
+    //     for(auto& drawable: m_drawables)
+    //     {
+    //         drawable->draw();
+    //     }
+    // }
+
+    std::vector<std::shared_ptr<IDrawable>> SceneObject::getDrawables() const
     {
-        for(auto& drawable: m_drawables)
-        {
-            drawable->draw();
-        }
+        return m_drawables;
     }
 
     void SceneObject::update(float dt)

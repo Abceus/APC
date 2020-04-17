@@ -7,9 +7,29 @@
 #include "core/clickable_area.h"
 #include "core/scene_object.h"
 
+#include "base/context.h"
+
 #include "components/afro.h"
 
 #include <memory>
+
+APC::GameConfig TestGame::getGameConfig()
+{
+    APC::GameConfig gameConfig;
+    gameConfig.width = 1024;
+    gameConfig.height = 768;
+
+    // gameConfig.width = 400;
+    // gameConfig.height = 1024;
+
+    // gameConfig.width = 692;
+    // gameConfig.height = 700;
+
+    // gameConfig.width = 1384;
+    // gameConfig.height = 1400;
+    gameConfig.gameName = "Test game";
+    return gameConfig;
+}
 
 void TestGame::init()
 {
@@ -22,7 +42,10 @@ void TestGame::init()
 
     auto newObject = std::make_shared<APC::SceneObject>();
     newObject->addComponent<APC::Transform>();
-    newObject->getComponent<APC::Transform>()->setPosition(APC::FCoord{400.0f, 300.0f});
+    auto context = static_cast<APC::Context*>(m_context);
+    auto center = APC::FCoord { context->getScreenSize().x/2.0f, context->getScreenSize().y/2.0f };
+    // newObject->getComponent<APC::Transform>()->setPosition({300.0f, 200.0f});
+    newObject->getComponent<APC::Transform>()->setPosition(center);
     newObject->getComponent<APC::Transform>()->setScale(0.5f);
     newObject->addComponent<APC::Sprite>();
     newObject->getComponent<APC::Sprite>()->setTexture(texture);
@@ -67,8 +90,12 @@ void TestGame::init()
     // m_left = false;
 }
 
-void TestGame::update( float dt )
+void TestGame::quit()
 {
+}
+
+// void TestGame::update( float dt )
+// {
     // {
     //     float speed = 50.0f; 
     //     auto rotationTransform = m_testNode->getTypedRotationTransform<APC::TRotation>();
@@ -108,34 +135,34 @@ void TestGame::update( float dt )
     //         }
     //     }
     // }
-}
+// }
 
-void TestGame::zoom( float delta )
-{
-    m_context->log( "Zoom", delta );
-}
+// void TestGame::zoom( float delta )
+// {
+//     m_context->log( "Zoom", delta );
+// }
 
-void TestGame::button( const APC::Coord& value )
-{
-    m_context->log( "Button", value.x, value.y );
-}
+// void TestGame::button( const APC::Coord& value )
+// {
+//     m_context->log( "Button", value.x, value.y );
+// }
 
-void TestGame::altButton( const APC::Coord& value )
-{
-    m_context->log( "Alt button", value.x, value.y );
-}
+// void TestGame::altButton( const APC::Coord& value )
+// {
+//     m_context->log( "Alt button", value.x, value.y );
+// }
 
-void TestGame::holdedMove( const APC::Coord &value )
-{
-    m_context->log( "Holded move", value.x, value.y );
-}
+// void TestGame::holdedMove( const APC::Coord &value )
+// {
+//     m_context->log( "Holded move", value.x, value.y );
+// }
 
-void TestGame::drag( const APC::Coord &value )
-{
-    m_context->log( "Drag", value.x, value.y );
-}
+// void TestGame::drag( const APC::Coord &value )
+// {
+//     m_context->log( "Drag", value.x, value.y );
+// }
 
-void TestGame::drop( const APC::Coord &value )
-{
-    m_context->log( "Drop", value.x, value.y );
-}
+// void TestGame::drop( const APC::Coord &value )
+// {
+//     m_context->log( "Drop", value.x, value.y );
+// }

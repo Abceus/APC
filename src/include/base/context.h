@@ -5,6 +5,7 @@
 #include "core/context.h"
 #include "core/renderer.h"
 #include "core/game.h"
+#include "core/game_config.h"
 #include "base/scene_manager_impl.h"
 
 namespace APC
@@ -16,8 +17,8 @@ namespace APC
         void operator=(Context const&) = delete;
         static Context& getInstance();
         template<typename RendererClass, typename GameClass>
-        void init(int w, int h);
-        void init(int w, int h) override;
+        void init();
+        void init() override;
         void update( float dt ) override;
         void draw() override;
         void zoom( float delta ) override;
@@ -29,19 +30,23 @@ namespace APC
         void quit() override;
         void screenSizeChanged( const Coord& newSize ) override;
         ISceneManager* getSceneManager() override;
-        Coord getScreenSize();
+        Coord getScreenSize() const;
+        Coord getRealScreenSize() const;
+        GameConfig getGameConfig() const;
     private:
         Context() = default;
         std::unique_ptr<IRenderer> m_renderer;
         std::unique_ptr<IGame> m_game;
         std::unique_ptr<ISceneManager> m_sceneManager;
+        GameConfig m_gameConfig;
     };
 
     template<typename RendererClass, typename GameClass>
-    void Context::init(int w, int h)
+    void Context::init()
     {
         m_renderer = std::make_unique<RendererClass>();
         m_game = std::make_unique<GameClass>();
-        init(w, h);
+        m_gameConfig = GameClass::getGameConfig();
+        init();
     }
 }

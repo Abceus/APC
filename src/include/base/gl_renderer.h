@@ -14,15 +14,31 @@ namespace APC
     {
     public:
         GLRenderer();
-        void init(int w, int h) override;
+        void init() override;
+        void screenChange(int w, int h) override;
         void draw(std::shared_ptr<IScene> scene) override;
         void destroy() override;
         int getWidth() override;
         int getHeight() override;
     private:
+        static GLuint loadShader(const GLchar* fragmentShaderSource, const GLchar* vertexShaderSource);
+
+        int getBiggerSide() const;
+        int getSmallerSide() const;
+        float m_hratio;
+        float m_wratio;
         // GLTextureResourcePtr m_texture;
         // GLuint VBO, VAO, EBO;
-        GLuint shaderProgram;
-        int m_width, m_height;
+        GLuint m_shaderProgram;
+        GLuint m_renderTextureShaderProgram;
+        int m_width;
+        int m_height;
+        GLuint m_frameBuffer;
+        GLuint m_renderTexture;
+
+        GLuint VBO, VAO, EBO;
+
+        float m_proportionWidth;
+        float m_proportionHeight;
     };
 }

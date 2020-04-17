@@ -12,7 +12,10 @@
 #include <GLFW/glfw3.h>
 #include <functional>
 
-const GLuint WIDTH = 800, HEIGHT = 600;
+// const GLuint WIDTH = 1920, HEIGHT = 1080;
+// const GLuint WIDTH = 1080, HEIGHT = 1920;
+// const GLuint WIDTH = 800, HEIGHT = 600;
+// const GLuint WIDTH = 850, HEIGHT = 692;
 
 class PCLog : public APC::ILog
 {
@@ -52,9 +55,12 @@ public:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        // glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "APC", nullptr, nullptr);
+        auto config = TestGame::getGameConfig();
+
+        // window = glfwCreateWindow(config.width, config.height, "APC", nullptr, nullptr);
+        window = glfwCreateWindow(524, 568, "APC", nullptr, nullptr);
         if (window == nullptr)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -66,6 +72,7 @@ public:
         glfwSetScrollCallback(window, &PC::scroll_callback);
         glfwSetCursorPosCallback(window, &PC::cursor_position_callback);
         glfwSetCursorEnterCallback(window, &PC::cursor_enter_callback);
+        glfwSetWindowSizeCallback(window, &PC::window_size_callback);
 
 
 //    glfwSetKeyCallback(window, key_callback);
@@ -82,6 +89,7 @@ public:
         APC::Context::getInstance().setLogImpl<PCLog>();
         APC::Context::getInstance().setLoaderImpl<PCFileLoader>();
         APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
+        APC::Context::getInstance().screenSizeChanged({width, height});
     }
     void run()
     {
@@ -155,6 +163,11 @@ public:
     static void cursor_enter_callback(GLFWwindow* window, int entered)
     {
         PC::m_mouseFocused = static_cast<bool>(entered);
+    }
+
+    static void window_size_callback(GLFWwindow* window, int width, int height)
+    {
+        APC::Context::getInstance().screenSizeChanged({width, height});
     }
 private:
     GLFWwindow* window;

@@ -338,12 +338,12 @@ class GL2JNIView extends GLSurfaceView {
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            APCLib.init(m_context.getAssets(), width, height);
+            APCLib.screenSizeChanged(width, height);
             lastFrame = System.currentTimeMillis();
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            // Do nothing.
+            APCLib.init(m_context.getAssets());
         }
     }
 }

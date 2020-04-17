@@ -23,6 +23,7 @@
 #include "core/game.h"
 #include "core/log.h"
 #include "core/file_loader.h"
+#include "core/utility.h"
 #include "base/context.h"
 #include "base/gl_renderer.h"
 #include "test_game.h"
@@ -79,11 +80,16 @@ private:
 };
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject assetManager, jint width, jint height) {
+Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject assetManager) {
     APC::Context::getInstance().setLogImpl<AndroidLog>();
     AAssetManager *nativeAssetManager = AAssetManager_fromJava(env, assetManager);
     APC::Context::getInstance().setLoaderImpl<AndroidFileLoader>(nativeAssetManager);
-    APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
+    APC::Context::getInstance().init<APC::GLRenderer, TestGame>();
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_screenSizeChanged(JNIEnv *env, jobject thiz, jint width, jint height) {
+    APC::Context::getInstance().screenSizeChanged({width, height});
 }
 
 extern "C" JNIEXPORT void JNICALL
