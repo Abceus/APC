@@ -88,7 +88,7 @@ public:
 
         APC::Context::getInstance().setLogImpl<PCLog>();
         APC::Context::getInstance().setLoaderImpl<PCFileLoader>();
-        APC::Context::getInstance().init<APC::GLRenderer, TestGame>(width, height);
+        APC::Context::getInstance().init<APC::GLRenderer, TestGame>();
         APC::Context::getInstance().screenSizeChanged({width, height});
     }
     void run()
