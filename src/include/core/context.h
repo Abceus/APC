@@ -3,13 +3,13 @@
 #include <functional>
 #include <sstream>
 #include <memory>
-#include "core/utility.h"
+#include "core/coord.h"
 #include "core/log.h"
 #include "core/file_loader.h"
 #include "core/resource_manager.h"
 #include "core/scene_manager.h"
 
-namespace APC
+namespace apc
 {
     class IContext
     {
@@ -18,13 +18,13 @@ namespace APC
         virtual void update( float dt ) = 0;
         virtual void draw() = 0;
         virtual void zoom( float delta ) = 0;
-        virtual void button( const Coord& value ) = 0;
-        virtual void altButton( const Coord& value ) = 0;
-        virtual void holdedMove( const Coord& value ) = 0;
-        virtual void drag( const Coord& value ) = 0;
-        virtual void drop( const Coord& value ) = 0;
+        virtual void button( const ICoord& value ) = 0;
+        virtual void altButton( const ICoord& value ) = 0;
+        virtual void holdedMove( const ICoord& value ) = 0;
+        virtual void drag( const ICoord& value ) = 0;
+        virtual void drop( const ICoord& value ) = 0;
         virtual void quit() = 0;
-        virtual void screenSizeChanged( const Coord& newSize ) = 0;
+        virtual void screenSizeChanged( const ICoord& newSize ) = 0;
 
         virtual ISceneManager* getSceneManager() = 0;
 

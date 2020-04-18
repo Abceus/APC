@@ -7,7 +7,7 @@
 #include "core/scene.h"
 #include "core/scene_object.h"
 
-namespace APC
+namespace apc
 {
     class Scene : public IScene
     {
@@ -22,7 +22,7 @@ namespace APC
         std::vector<std::list<std::shared_ptr<SceneObject>>> getObjects() const override;
 
         void update(float dt) override;
-        void click(const Coord& coord) override;
+        void click(const ICoord& coord) override;
     private:
         std::vector<std::list<std::shared_ptr<SceneObject>>> m_objects;
         std::vector<std::string> m_layers;

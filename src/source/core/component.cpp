@@ -1,6 +1,6 @@
 #include "core/component.h"
 
-namespace APC
+namespace apc
 {
     void Component::setSceneObject(SceneObject* object)
     {

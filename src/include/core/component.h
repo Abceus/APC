@@ -1,6 +1,6 @@
 #pragma once
 
-namespace APC
+namespace apc
 {
     class SceneObject;
     class Component

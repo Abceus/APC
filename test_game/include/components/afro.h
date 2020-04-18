@@ -1,7 +1,7 @@
 #include <core/component.h>
 #include <core/components/updatable.h>
 
-class Afro : public APC::Component, public APC::IUpdatable
+class Afro : public apc::Component, public apc::IUpdatable
 {
 public:
     void init() override;

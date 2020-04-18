@@ -1,22 +1,15 @@
 #pragma once
 
-#include "core/utility.h"
+#include "core/coord.h"
 #include "core/context.h"
 
-namespace APC
+namespace apc
 {
     class IGame
     {
     public:
         virtual void init() = 0;
         virtual void quit() = 0;
-        // virtual void update( float dt ) = 0;
-        // virtual void zoom( float delta ) = 0;
-        // virtual void button( const Coord& value ) = 0;
-        // virtual void altButton( const Coord& value ) = 0;
-        // virtual void holdedMove( const Coord &value ) = 0;
-        // virtual void drag( const Coord &value ) = 0;
-        // virtual void drop( const Coord &value ) = 0;
         virtual ~IGame() = default;
         void setContext( IContext* context );
     protected:

@@ -4,7 +4,7 @@
 
 #include "core/resource_manager.h"
 
-namespace APC
+namespace apc
 {
     class ImageResource
     {

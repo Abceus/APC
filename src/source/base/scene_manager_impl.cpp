@@ -1,7 +1,7 @@
 #include "base/scene_manager_impl.h"
 #include <algorithm>
 
-namespace APC
+namespace apc
 {
     void SceneManager::addScene(std::string name, std::shared_ptr<IScene> scene)
     {

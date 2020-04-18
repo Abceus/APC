@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-namespace APC
+namespace apc
 {
     class SceneObject
     {
@@ -29,7 +29,7 @@ namespace APC
 
         // void draw();
         void update(float dt);
-        void click(const Coord& coord);
+        void click(const ICoord& coord);
 
         std::vector<std::shared_ptr<IDrawable>> getDrawables() const;
 

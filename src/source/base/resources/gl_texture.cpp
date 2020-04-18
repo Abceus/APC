@@ -1,7 +1,7 @@
 #include "base/resources/gl_texture.h"
 #include "base/context.h"
 
-namespace APC
+namespace apc
 {
     GLTextureResource::GLTextureResource()
             : m_index( 0 )

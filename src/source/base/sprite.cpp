@@ -2,7 +2,7 @@
 
 #include "base/context.h"
 
-namespace APC
+namespace apc
 {
     void Sprite::setTexture(GLTextureResourcePtr texture)
     {

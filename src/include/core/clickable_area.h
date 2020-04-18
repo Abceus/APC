@@ -2,26 +2,26 @@
 
 #include <functional>
 
-#include "core/utility.h"
+#include "core/coord.h"
 #include "core/component.h"
 #include "core/components/screen_sensative.h"
 #include "core/components/clickable.h"
 
-namespace APC
+namespace apc
 {
     class ClickableArea : public Component, public IScreenSensative, public IClickable
     {
     public:        
-        void setArea(Coord area);
+        void setArea(ICoord area);
 
-        void screenSizeChanged(const Coord& newSize) override;
+        void screenSizeChanged(const ICoord& newSize) override;
 
-        void click( const Coord& value ) override;
+        void click( const ICoord& value ) override;
 
         void setCallback(const std::function<void()>& callback);
     private:
-        Coord m_area;
-        Coord m_halfArea;
+        ICoord m_area;
+        ICoord m_halfArea;
         std::function<void()> m_callback;
     };
 }

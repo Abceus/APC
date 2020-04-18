@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 
-namespace APC
+namespace apc
 {
     class SceneManager : public ISceneManager
     {

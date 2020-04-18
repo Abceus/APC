@@ -2,11 +2,12 @@
 
 #include <memory>
 #include <glm/glm.hpp>
-#include "core/utility.h"
+#include "core/coord.h"
+#include "core/color.h"
 #include "core/component.h"
 #include "core/components/screen_sensative.h"
 
-namespace APC
+namespace apc
 {
     class Transform : public Component, public IScreenSensative
     {
@@ -30,7 +31,7 @@ namespace APC
         
         glm::mat4 getMatrix() const;
 
-        void screenSizeChanged(const Coord& newSize) override;
+        void screenSizeChanged(const ICoord& newSize) override;
     private:
         FCoord m_position;
         float m_rotation;

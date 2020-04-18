@@ -5,7 +5,7 @@
 
 #include "core/scene.h"
 
-namespace APC
+namespace apc
 {
     class ISceneManager
     {

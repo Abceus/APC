@@ -9,7 +9,7 @@
 #include "base/context.h"
 #include "core/transform.h"
 
-namespace APC
+namespace apc
 {
     GLRenderer::GLRenderer()
         : m_height( 0 )
@@ -224,7 +224,7 @@ namespace APC
 
     void GLRenderer::draw(std::shared_ptr<IScene> scene)
     {
-        glViewport(0, 0, m_width, m_height);
+        glViewport(0, 0, static_cast<int>( m_proportionWidth ), static_cast<int>( m_proportionHeight) );
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
 
@@ -384,6 +384,11 @@ namespace APC
         return m_height;
     }
 
+    FCoord GLRenderer::getScaledScreenSize() const
+    {
+        return { m_proportionWidth, m_proportionHeight };
+    }
+
     int GLRenderer::getBiggerSide() const
     {
         return m_width > m_height ? m_width : m_height;
@@ -409,8 +414,8 @@ namespace APC
         if (!success)
         {
             glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-            APC::Context::getInstance().log( "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" );
-            APC::Context::getInstance().log( infoLog );
+            apc::Context::getInstance().log( "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" );
+            apc::Context::getInstance().log( infoLog );
             return 0;
         }
 
@@ -423,8 +428,8 @@ namespace APC
         if (!success)
         {
             glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-            APC::Context::getInstance().log( "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" );
-            APC::Context::getInstance().log( infoLog );
+            apc::Context::getInstance().log( "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" );
+            apc::Context::getInstance().log( infoLog );
             return 0;
         }
 
@@ -436,8 +441,8 @@ namespace APC
         glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-            APC::Context::getInstance().log( "ERROR::SHADER::shaderProgram::LINKING_FAILED\n" );
-            APC::Context::getInstance().log( infoLog );
+            apc::Context::getInstance().log( "ERROR::SHADER::shaderProgram::LINKING_FAILED\n" );
+            apc::Context::getInstance().log( infoLog );
             return 0;
         }
 

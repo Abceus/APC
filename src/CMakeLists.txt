@@ -19,7 +19,9 @@ add_library(APC SHARED
         source/core/transform.cpp
         source/core/clickable_area.cpp
         source/core/component.cpp
-        source/core/scene_object.cpp)
+        source/core/scene_object.cpp
+        source/core/coord.cpp
+        source/core/color.cpp)
 
 target_include_directories(APC 
         PRIVATE ${OPENGL_INCLUDE_DIRS} 

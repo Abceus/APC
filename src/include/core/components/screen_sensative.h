@@ -1,11 +1,11 @@
 #pragma once
-#include <core/utility.h>
+#include <core/coord.h>
 
-namespace APC
+namespace apc
 {
     class IScreenSensative
     {
     public:
-        virtual void screenSizeChanged(const Coord& newSize) = 0;
+        virtual void screenSizeChanged(const ICoord& newSize) = 0;
     };
 }

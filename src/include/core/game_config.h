@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace APC
+namespace apc
 {
     struct GameConfig
     {

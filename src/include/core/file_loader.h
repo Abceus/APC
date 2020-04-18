@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-namespace APC
+namespace apc
 {
     class IFileLoader
     {

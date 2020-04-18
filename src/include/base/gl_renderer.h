@@ -8,7 +8,7 @@
 #include <list>
 #include <memory>
 
-namespace APC
+namespace apc
 {
     class GLRenderer : public IRenderer
     {
@@ -20,6 +20,7 @@ namespace APC
         void destroy() override;
         int getWidth() override;
         int getHeight() override;
+        FCoord getScaledScreenSize() const;
     private:
         static GLuint loadShader(const GLchar* fragmentShaderSource, const GLchar* vertexShaderSource);
 

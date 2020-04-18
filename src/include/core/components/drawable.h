@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/utility.h"
+#include "core/coord.h"
 
-namespace APC
+namespace apc
 {
     class IDrawable 
     {

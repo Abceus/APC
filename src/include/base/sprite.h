@@ -3,9 +3,9 @@
 #include "core/component.h"
 #include "core/components/drawable.h"
 #include "base/resources/gl_texture.h"
-#include "core/utility.h"
+#include "core/coord.h"
 
-namespace APC
+namespace apc
 {
     class Sprite : public Component, public IDrawable
     {

@@ -3,19 +3,19 @@
 #include "core/clickable_area.h"
 
 
-namespace APC
+namespace apc
 {       
-    void ClickableArea::setArea(Coord area)
+    void ClickableArea::setArea(ICoord area)
     {
         m_area = area;
         m_halfArea = { m_area.x/2, m_area.y/2 };
     }
 
-    void ClickableArea::screenSizeChanged(const Coord& newSize)
+    void ClickableArea::screenSizeChanged(const ICoord& newSize)
     {
     }
 
-    void ClickableArea::click( const Coord& value )
+    void ClickableArea::click( const ICoord& value )
     {
         std::cout << value.x << " " << value.y << std::endl;
         if(!m_callback)

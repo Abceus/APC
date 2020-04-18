@@ -6,7 +6,7 @@
 #include "base/context.h"
 #include "base/context.h"
 
-namespace APC
+namespace apc
 {
     void Scene::initLayers(const std::vector<std::string>& layers)
     {
@@ -103,7 +103,7 @@ namespace APC
         }
     }
 
-    void Scene::click(const Coord& coord)
+    void Scene::click(const ICoord& coord)
     {
         for(auto& layerDrawables: m_objects)
         {

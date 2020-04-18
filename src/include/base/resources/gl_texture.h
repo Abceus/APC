@@ -6,7 +6,7 @@
 #include "core/resource_manager.h"
 #include "base/resources/image.h"
 
-namespace APC
+namespace apc
 {
     class GLTextureResource
     {

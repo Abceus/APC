@@ -1,6 +1,6 @@
 #pragma once
 
-namespace APC
+namespace apc
 {
     class ILog
     {

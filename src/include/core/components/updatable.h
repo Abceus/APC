@@ -1,5 +1,5 @@
 #pragma once
-namespace APC
+namespace apc
 {
     class IUpdatable 
     {

@@ -5,7 +5,7 @@
 #include "third/stb/stb_image.h"
 
 
-namespace APC
+namespace apc
 {
     ImageResource::ImageResource()
             : m_data( nullptr )

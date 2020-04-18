@@ -6,7 +6,7 @@
 
 #include "core/file_loader.h"
 
-namespace APC
+namespace apc
 {
     template<typename ResourceType>
     class ResourcePtr

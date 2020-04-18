@@ -1,8 +1,8 @@
 #include "core/game.h"
 
-namespace APC
+namespace apc
 {
-    void IGame::setContext(APC::IContext *context)
+    void IGame::setContext(apc::IContext *context)
     {
         m_context = context;
     }

@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace APC
+namespace apc
 {
     Transform::Transform() : m_position({0.0f, 0.0f}), m_rotation(0.0f), m_scale({1.0f, 1.0f}), m_color({1.0f, 1.0f, 1.0f, 1.0f})
     {
@@ -68,7 +68,7 @@ namespace APC
             result = m_parent->getMatrix();
         }
 
-        auto biggerSide = static_cast<float>( std::max(Context::getInstance().getScreenSize().x, Context::getInstance().getScreenSize().y) );
+        auto biggerSide = static_cast<float>( std::max(Context::getInstance().getScaledScreenSize().x, Context::getInstance().getScaledScreenSize().y) );
 
         result = glm::translate(result, glm::fvec3(m_position.x/biggerSide, 
         m_position.y/biggerSide, 0.0f));
@@ -82,7 +82,7 @@ namespace APC
         return result;
     }
 
-    void Transform::screenSizeChanged(const Coord& newSize)
+    void Transform::screenSizeChanged(const ICoord& newSize)
     {
         
     }

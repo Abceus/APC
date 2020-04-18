@@ -1,7 +1,7 @@
 #include "core/scene_object.h"
 
 
-namespace APC
+namespace apc
 {
     // void SceneObject::draw()
     // {
@@ -24,7 +24,7 @@ namespace APC
         }
     }
 
-    void SceneObject::click(const Coord& coord)
+    void SceneObject::click(const ICoord& coord)
     {
         for(auto& clickable: m_clickables)
         {

@@ -8,7 +8,7 @@
 #include "core/game_config.h"
 #include "base/scene_manager_impl.h"
 
-namespace APC
+namespace apc
 {
     class Context : public IContext
     {
@@ -22,16 +22,17 @@ namespace APC
         void update( float dt ) override;
         void draw() override;
         void zoom( float delta ) override;
-        void button( const Coord& value ) override;
-        void altButton( const Coord& value ) override;
-        void holdedMove( const Coord& value ) override;
-        void drag( const Coord& value ) override;
-        void drop( const Coord& value ) override;
+        void button( const ICoord& value ) override;
+        void altButton( const ICoord& value ) override;
+        void holdedMove( const ICoord& value ) override;
+        void drag( const ICoord& value ) override;
+        void drop( const ICoord& value ) override;
         void quit() override;
-        void screenSizeChanged( const Coord& newSize ) override;
+        void screenSizeChanged( const ICoord& newSize ) override;
         ISceneManager* getSceneManager() override;
-        Coord getScreenSize() const;
-        Coord getRealScreenSize() const;
+        ICoord getScreenSize() const;
+        ICoord getScaledScreenSize() const;
+        ICoord getRealScreenSize() const;
         GameConfig getGameConfig() const;
     private:
         Context() = default;

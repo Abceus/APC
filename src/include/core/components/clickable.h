@@ -1,12 +1,12 @@
 #pragma once
-#include "core/utility.h"
+#include "core/coord.h"
 
 
-namespace APC
+namespace apc
 {
     class IClickable
     {
     public:
-        virtual void click( const Coord& value ) = 0;
+        virtual void click( const ICoord& value ) = 0;
     };
 }

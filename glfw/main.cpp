@@ -17,7 +17,7 @@
 // const GLuint WIDTH = 800, HEIGHT = 600;
 // const GLuint WIDTH = 850, HEIGHT = 692;
 
-class PCLog : public APC::ILog
+class PCLog : public apc::ILog
 {
 public:
     void print( const std::stringstream &stream ) override
@@ -26,7 +26,7 @@ public:
     }
 };
 
-class PCFileLoader : public APC::IFileLoader
+class PCFileLoader : public apc::IFileLoader
 {
 public:
     std::vector<unsigned char> load( const std::string &path ) const override
@@ -59,8 +59,8 @@ public:
 
         auto config = TestGame::getGameConfig();
 
-        // window = glfwCreateWindow(config.width, config.height, "APC", nullptr, nullptr);
-        window = glfwCreateWindow(524, 568, "APC", nullptr, nullptr);
+        // window = glfwCreateWindow(config.width, config.height, config.gameName, nullptr, nullptr);
+        window = glfwCreateWindow(524, 568, config.gameName.c_str(), nullptr, nullptr);
         if (window == nullptr)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -86,10 +86,10 @@ public:
 
         glfwGetFramebufferSize(window, &width, &height);
 
-        APC::Context::getInstance().setLogImpl<PCLog>();
-        APC::Context::getInstance().setLoaderImpl<PCFileLoader>();
-        APC::Context::getInstance().init<APC::GLRenderer, TestGame>();
-        APC::Context::getInstance().screenSizeChanged({width, height});
+        apc::Context::getInstance().setLogImpl<PCLog>();
+        apc::Context::getInstance().setLoaderImpl<PCFileLoader>();
+        apc::Context::getInstance().init<apc::GLRenderer, TestGame>();
+        apc::Context::getInstance().screenSizeChanged({width, height});
     }
     void run()
     {
@@ -100,15 +100,15 @@ public:
             auto currentFrame = glfwGetTime();
             auto deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
-            APC::Context::getInstance().update(deltaTime);
-            APC::Context::getInstance().draw();
+            apc::Context::getInstance().update(deltaTime);
+            apc::Context::getInstance().draw();
             glfwSwapBuffers(window);
         }
     }
 
     void deinit()
     {
-        APC::Context::getInstance().quit();
+        apc::Context::getInstance().quit();
         glfwTerminate();
     }
 
@@ -123,16 +123,16 @@ public:
                 case GLFW_MOUSE_BUTTON_LEFT:
                     if( !m_dragged )
                     {
-                        APC::Context::getInstance().button( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+                        apc::Context::getInstance().button( { static_cast<int>(xpos), static_cast<int>(ypos) } );
                     }
                     else
                     {
                         m_dragged = false;
-                        APC::Context::getInstance().drop( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+                        apc::Context::getInstance().drop( { static_cast<int>(xpos), static_cast<int>(ypos) } );
                     }
                     break;
                 case GLFW_MOUSE_BUTTON_RIGHT:
-                    APC::Context::getInstance().altButton( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+                    apc::Context::getInstance().altButton( { static_cast<int>(xpos), static_cast<int>(ypos) } );
                     break;
             }
         }
@@ -140,7 +140,7 @@ public:
 
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
-        APC::Context::getInstance().zoom( yoffset );
+        apc::Context::getInstance().zoom( yoffset );
     }
 
     static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -151,11 +151,11 @@ public:
             if( !m_dragged )
             {
                 m_dragged = true;
-                APC::Context::getInstance().drag({ static_cast<int>(xpos), static_cast<int>(ypos) });
+                apc::Context::getInstance().drag({ static_cast<int>(xpos), static_cast<int>(ypos) });
             }
             else
             {
-                APC::Context::getInstance().holdedMove( { static_cast<int>(xpos), static_cast<int>(ypos) } );
+                apc::Context::getInstance().holdedMove( { static_cast<int>(xpos), static_cast<int>(ypos) } );
             }
         }
     }
@@ -167,7 +167,7 @@ public:
 
     static void window_size_callback(GLFWwindow* window, int width, int height)
     {
-        APC::Context::getInstance().screenSizeChanged({width, height});
+        apc::Context::getInstance().screenSizeChanged({width, height});
     }
 private:
     GLFWwindow* window;
