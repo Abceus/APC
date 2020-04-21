@@ -1,5 +1,5 @@
-#include <core/component.h>
-#include <core/components/updatable.h>
+#include <apc/component.h>
+#include <apc/components/updatable.h>
 
 class Afro : public apc::Component, public apc::IUpdatable
 {

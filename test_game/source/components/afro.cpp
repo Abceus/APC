@@ -1,7 +1,7 @@
 #include "components/afro.h"
 
-#include "core/transform.h"
-#include "core/scene_object.h"
+#include "apc/transform.h"
+#include "apc/scene_object.h"
 
 #include <iostream>
 

@@ -1,5 +1,5 @@
-#include <core/game.h>
-#include <core/game_config.h>
+#include <apc/game.h>
+#include <apc/game_config.h>
 #include <memory>
 
 class TestGame : public apc::IGame

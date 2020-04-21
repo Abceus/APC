@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "test_game.h"
-#include "base/context.h"
-#include "base/gl_renderer.h"
-#include "core/log.h"
-#include "core/file_loader.h"
+#include "apc/context.h"
+#include "apc/opengl/gl_renderer.h"
+#include "apc/log.h"
+#include "apc/file_loader.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>

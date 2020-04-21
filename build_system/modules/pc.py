@@ -9,12 +9,14 @@ class PC(Module):
     def configure(self):
         if not os.path.exists("./build/pc/build"):
             os.makedirs("./build/pc/build")
-        copy_changed_directory("./src", "./build/pc/apc")
+        copy_changed_directory("./src/core", "./build/pc/apc")
+        copy_changed_directory("./src/opengl_impl", "./build/pc/opengl_impl")
         copy_changed_directory("./test_game", "./build/pc/test_game")
         copy_changed_directory("./glfw", "./build/pc/glfw")
         f = open("./build/pc/CMakeLists.txt","w+")
         f.write("cmake_minimum_required(VERSION 3.4.1)\n" +
                     "add_subdirectory(apc)\n" +
+                    "add_subdirectory(opengl_impl)\n" +
                     "add_subdirectory(test_game)\n" +
                     "add_subdirectory(glfw)")
         f.close()
