@@ -29,6 +29,7 @@ namespace apc
 
         void setParent(std::shared_ptr<Transform> parent);
         
+        Matrixf33 getScaledMatrix() const;
         Matrixf33 getMatrix() const;
 
         void screenSizeChanged(const ICoord& newSize) override;

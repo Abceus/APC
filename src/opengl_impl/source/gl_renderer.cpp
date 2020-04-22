@@ -261,7 +261,7 @@ namespace apc
                     
                     if(transform)
                     {
-                        trans = trans * transform->getMatrix();
+                        trans = trans * transform->getScaledMatrix();
                     }
 
                     glm::mat4 glmMat(1.0f);

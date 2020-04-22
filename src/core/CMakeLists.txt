@@ -12,7 +12,8 @@ add_library(APC SHARED
         source/color.cpp
         source/scene_manager.cpp
         source/context.cpp
-        source/math_utils.cpp)
+        source/math_utils.cpp
+        source/polygon.cpp)
 
 target_include_directories(APC
         PRIVATE include/apc

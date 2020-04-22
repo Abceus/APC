@@ -1,14 +1,14 @@
 #include "transform.h"
 #include "scene_object.h"
 #include "clickable_area.h"
+#include "context.h"
 
 
 namespace apc
 {       
-    void ClickableArea::setArea(ICoord area)
+    void ClickableArea::setArea(const Polygon& area)
     {
         m_area = area;
-        m_halfArea = { m_area.x/2, m_area.y/2 };
     }
 
     void ClickableArea::screenSizeChanged(const ICoord& newSize)
@@ -23,11 +23,10 @@ namespace apc
         }
 
         auto transform = getSceneObject()->getComponent<Transform>();
-        auto position = transform->getPosition();
-        auto scale = transform->getScale();
-        auto leftUpPoint = FCoord{ position.x - m_halfArea.x * scale.x, position.y - m_halfArea.y * scale.y };
-        auto rightDownPoint = FCoord{ position.x + m_halfArea.x * scale.x, position.y + m_halfArea.y * scale.y };
-        if( value.x >= leftUpPoint.x && value.x <= rightDownPoint.x && value.y >= leftUpPoint.y && value.y <= rightDownPoint.y )
+
+        auto transformedPolygon = Polygon::getTransformed(m_area, transform->getMatrix());
+
+        if( transformedPolygon.inside( coord_cast<FCoord>( value ) ) )
         {
             m_callback();
         }

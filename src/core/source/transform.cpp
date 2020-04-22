@@ -66,6 +66,24 @@ namespace apc
             result = m_parent->getMatrix();
         }
 
+        result = Matrixf33::translate(result, m_position);
+
+        result = Matrixf33::rotate(result, -m_rotation);
+
+        result = Matrixf33::scale(result, m_scale);
+
+        return result;
+    }
+
+    Matrixf33 Transform::getScaledMatrix() const
+    {
+        Matrixf33 result(1.0);
+
+        if(m_parent)
+        {
+            result = m_parent->getScaledMatrix();
+        }
+
         auto smallerSide = static_cast<float>( std::min(Context::getInstance().getScreenSize().x, Context::getInstance().getScreenSize().y) );
         auto biggerSide = static_cast<float>( std::max(Context::getInstance().getScreenSize().x, Context::getInstance().getScreenSize().y) );
 

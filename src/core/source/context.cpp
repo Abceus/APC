@@ -43,9 +43,23 @@ namespace apc
     void Context::button( const ICoord& value )
     {
         auto currentScene = m_sceneManager->getCurrentScene();
+        auto v = value;
+
+        if(getRealScreenSize().x > getScaledScreenSize().x)
+        {
+            v.x = v.x + (getRealScreenSize().x - getScaledScreenSize().x) / 2.0f;
+        }
+
+        if(getRealScreenSize().y > getScaledScreenSize().y)
+        {
+            v.y = v.y + (getRealScreenSize().y - getScaledScreenSize().y) / 2.0f;
+        }
+
+        log(v.x, v.y);
+
         if(currentScene)
         {
-            currentScene->click(value);
+            currentScene->click(v);
         }
         // m_game->button( { static_cast<int>( static_cast<float>( value.x ) / static_cast<float>( m_renderer->getWidth() ) * WIDTH ),
         //                   static_cast<int>( static_cast<float>( value.y ) / static_cast<float>( m_renderer->getHeight() ) * HEIGHT ) } );

@@ -4,12 +4,14 @@
 #include <type_traits>
 #include <cmath>
 
-#include "apc/coord.h"
 #include "apc/math_utils.h"
 
 
 namespace apc
 {
+    template<typename T>
+    struct Coord;
+
     template<typename T, size_t rowsAmount, size_t columnsAmount>
     class Matrix
     {

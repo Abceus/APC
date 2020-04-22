@@ -8,6 +8,7 @@
 #include "apc/scene_object.h"
 
 #include "apc/context.h"
+#include "apc/polygon.h"
 
 #include "components/afro.h"
 
@@ -44,7 +45,8 @@ void TestGame::init()
     newObject->addComponent<Afro>();
 
     newObject->addComponent<apc::ClickableArea>();
-    newObject->getComponent<apc::ClickableArea>()->setArea({ texture->getWidth(), texture->getHeight() });
+    newObject->getComponent<apc::ClickableArea>()->setArea(apc::Polygon::makeSquade({-texture->getWidth()/2.0f, -texture->getHeight()/2.0f}, 
+                                                            {texture->getWidth()/2.0f, texture->getHeight()/2.0f}));
     newObject->getComponent<apc::ClickableArea>()->setCallback([newObject]{ newObject->getComponent<Afro>()->changeColor(); });
 
     currentScene->addSceneObject(newObject, "main");

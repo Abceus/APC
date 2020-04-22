@@ -2,6 +2,7 @@
 
 #include "apc/specialization_check.h"
 #include "apc/math_utils.h"
+#include "apc/matrix.h"
 
 #include <type_traits>
 
@@ -32,6 +33,8 @@ namespace apc
         static T distance(const Coord<T>& first, const Coord<T>& second);
 
         static float angleBetween(const Coord<T>& first, const Coord<T>& second);
+
+        static Coord<T> getTransformed(const Coord<T>& point, const Matrixf33& matrix);
 
         using type = T;
     };
@@ -129,5 +132,17 @@ namespace apc
     {
         float angle = degrees( static_cast<float>( atan2( second.y - first.y, second.x - first.x ) ) );
         return angle < 0.0f ? angle + 360.0f : angle;
+    }
+
+    template<typename T>
+    Coord<T> Coord<T>::getTransformed(const Coord<T>& point, const Matrixf33& matrix)
+    {
+        Matrix<float, 3, 1> pointMatrix;
+        pointMatrix[0][0] = point.x;
+        pointMatrix[0][1] = point.y;
+        pointMatrix[0][2] = static_cast<T>(1);
+
+        pointMatrix = matrix * pointMatrix; 
+        return Coord<T>{ pointMatrix[0][0], pointMatrix[0][1] };
     }
 }
