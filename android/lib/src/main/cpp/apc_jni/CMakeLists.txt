@@ -19,6 +19,7 @@ target_link_libraries(apc_jni
                         android
                         log 
                         APC
+                        APC_OPENGL
                         test_game
                         # EGL
                         # GLESv2

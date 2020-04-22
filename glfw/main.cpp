@@ -60,8 +60,8 @@ public:
 
         auto config = TestGame::getGameConfig();
 
-        // window = glfwCreateWindow(config.width, config.height, config.gameName, nullptr, nullptr);
-        window = glfwCreateWindow(524, 568, config.gameName.c_str(), nullptr, nullptr);
+        window = glfwCreateWindow(config.width, config.height, config.gameName.c_str(), nullptr, nullptr);
+        // window = glfwCreateWindow(524, 568, config.gameName.c_str(), nullptr, nullptr);
         if (window == nullptr)
         {
             std::cout << "Failed to create GLFW window" << std::endl;

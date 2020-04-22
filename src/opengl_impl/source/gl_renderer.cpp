@@ -1,5 +1,4 @@
 #include "gl_renderer.h"
-#include <iostream>
 #include <algorithm>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -51,9 +50,10 @@ namespace apc
                                             "out vec2 TexCoord;\n"
                                             "uniform vec2 hotspot;\n"
                                             "uniform mat4 transform;\n"
+                                            "uniform mat4 size;\n"
                                             "void main()\n"
                                             "{\n"
-                                                "gl_Position = transform * vec4(position-hotspot, 0.0f, 1.0f);\n"
+                                                "gl_Position = transform * size  * vec4(position-hotspot, 0.0f, 1.0f);\n"
                                                 "TexCoord = texCoord;\n"
                                             "}\0";
 #else
@@ -76,8 +76,6 @@ namespace apc
                                              "uniform mat4 size;\n"
                                              "void main()\n"
                                              "{\n"
-                                                // "gl_Position = transform * size * vec4(position-hotspot, 0.0f, 1.0f);\n"
-                                                // "gl_Position = vec4(position-hotspot, 0.0f, 1.0f) * size * transform;\n"
                                                 "gl_Position = transform * size * vec4(position-hotspot, 0.0f, 1.0f);\n"
                                                 "TexCoord = texCoord;\n"
                                              "}\0";
@@ -248,32 +246,14 @@ namespace apc
                     float aspectw = 1.0f;
                     float aspecth = 1.0f;
 
-                    if(m_width > m_height)
+                    if(m_proportionWidth > m_proportionHeight)
                     {
-                        // aspecth = m_hratio * (m_height/static_cast<float>(m_width));
-                        aspecth = (m_height/static_cast<float>(m_width));
+                        aspecth = (m_proportionHeight/static_cast<float>(m_proportionWidth));
                     }
-                    else if(m_height > m_width)
+                    else if(m_proportionHeight > m_proportionWidth)
                     {
-                        // aspectw = m_wratio * (m_width/static_cast<float>(m_height));
-                        aspectw = (m_width/static_cast<float>(m_height));
+                        aspectw = (m_proportionWidth/static_cast<float>(m_proportionHeight));
                     }
-                    // auto trans = glm::ortho(0.0f, aspectw, aspecth, 0.0f, -1.0f, 1.0f);
-                    // auto trans = glm::ortho(0.0f, m_wratio, m_hratio, 0.0f, -1.0f, 1.0f);
-
-                    // std::cout << "Ratio: " << m_wratio << " " << m_hratio << std::endl;
-                    // std::cout << aspectw << " " << aspecth << std::endl;
-
-                    // auto trans = glm::mat4(1.0f);
-                    
-                    // const float aspectw = std::min(m_width/static_cast<float>(m_height), 1.0f);
-                    // const float aspecth = std::min(m_height/static_cast<float>(m_width), 1.0f);
-                    // auto trans = glm::ortho(0.0f, aspectw, aspecth, 0.0f, -1.0f, 1.0f);
-
-                    // auto trans = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -1.0f, 1.0f);
-                    
-                    // const float aspectw = std::min(m_width/static_cast<float>(m_height), 1.0f);
-                    // auto trans = glm::ortho(0.0f, aspectw, 1.0f, 0.0f, -1.0f, 1.0f);
 
                     Matrixf33 trans(1.0f);
 
@@ -285,28 +265,6 @@ namespace apc
                     }
 
                     glm::mat4 glmMat(1.0f);
-
-                    for(size_t i = 0; i < 3; i++)
-                    {
-                        for(size_t j = 0; j < 3; j++)
-                        {
-                            std::cout << trans[i][j] << '\t';
-                        }
-                        std::cout << std::endl;
-                    }
-                    std::cout << std::endl;
-
-                    // glmMat = glm::ortho(0.0f, aspectw, -aspecth, 0.0f, -1.0f, 1.0f);
-
-                    for(size_t i = 0; i < 4; i++)
-                    {
-                        for(size_t j = 0; j < 4; j++)
-                        {
-                            std::cout << glmMat[j][i] << '\t';
-                        }
-                        std::cout << std::endl;
-                    }
-                    std::cout << std::endl;
 
                     glmMat[0][0] = trans[0][0];
                     glmMat[1][0] = trans[0][1];
@@ -328,16 +286,6 @@ namespace apc
                     glmMat[2][3] = 0.0f;
                     glmMat[3][3] = trans[2][2];
 
-                    for(size_t i = 0; i < 4; i++)
-                    {
-                        for(size_t j = 0; j < 4; j++)
-                        {
-                            std::cout << glmMat[j][i] << '\t';
-                        }
-                        std::cout << std::endl;
-                    }
-                    std::cout << std::endl;
-
                     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(glmMat));
 
                     GLuint colorLocation = glGetUniformLocation(m_shaderProgram, "colorFactor");
@@ -349,8 +297,6 @@ namespace apc
                     }
                     glUniform4fv(colorLocation, 1, glm::value_ptr(glmColor));
 
-                    // object->draw();
-
                     GLuint hotspotLocation = glGetUniformLocation(m_shaderProgram, "hotspot");
 
                     auto drawables = object->getDrawables();
@@ -361,16 +307,30 @@ namespace apc
                     for(auto& drawable: drawables)
                     {
                         auto size = drawable->getSize();
-                        auto minScreen = std::min(fwidth, fheight);
-                        auto maxScreen = std::max(fwidth, fheight);
-                        auto sizeTransform = glm::scale(glm::mat4(1.0f), glm::fvec3(size.x/getSmallerSide(), size.y/getSmallerSide(), 1.0f));
-                        // std::cout << size.x/fheight << " " << size.y/fwidth << std::endl;
+
+                        auto virtualWidth = Context::getInstance().getGameConfig().width;
+                        auto virtualHeight = Context::getInstance().getGameConfig().height;
+
+                        auto minScreen = static_cast<float>(std::min(virtualWidth, virtualHeight));
+                        auto maxScreen = static_cast<float>(std::max(virtualWidth, virtualHeight));
+
+                        auto s = size;
+
+                        s.x = size.x/virtualWidth;
+                        s.y = size.y/virtualHeight;
+
+                        if(virtualWidth > virtualHeight) 
+                        {
+                            s.y = s.y * (minScreen/maxScreen);
+                        } else if(virtualWidth < virtualHeight)
+                        {
+                            s.x = s.x * (minScreen/maxScreen);
+                        }
+
+                        auto sizeTransform = glm::scale(glm::mat4(1.0f), glm::fvec3(s.x, s.y, 1.0f));
                         glUniformMatrix4fv(sizeLoc, 1, GL_FALSE, glm::value_ptr(sizeTransform));
-                        // glUniformMatrix4fv(sizeLoc, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
                         auto hotspot = drawable->getHotspot();
-                        glUniform2fv(hotspotLocation, 1, glm::value_ptr(glm::vec2(hotspot.x/size.x, hotspot.y/size.y)));
-                        // std::cout << hotspot.x/size.x << " " << hotspot.y/size.y << std::endl;
-                        // std::cout << std::endl;
+                        glUniform2fv(hotspotLocation, 1, glm::value_ptr(glm::fvec2(hotspot.x/size.x, hotspot.y/size.y)));
                         drawable->draw();
                     }
                 }
@@ -386,12 +346,7 @@ namespace apc
 
         GLuint transformLoc = glGetUniformLocation(m_renderTextureShaderProgram, "transform");        
 
-        // auto trans = glm::ortho(0.0f, m_wratio, m_hratio, 0.0f, -1.0f, 1.0f);
         auto trans = glm::ortho(0.0f, 1.0f, 1.0f, 0.0f, -1.0f, 1.0f);
-        // glm::mat4 trans(1.0f);
-
-        // auto virtualWidth = Context::getInstance().getGameConfig().width;
-        // auto virtualHeight = Context::getInstance().getGameConfig().height;
 
         if(m_width > m_proportionWidth)
         {
@@ -404,12 +359,6 @@ namespace apc
         }
         
         trans = glm::scale(trans, glm::vec3(m_wratio, m_hratio, 1.0f));
-        
-        // trans = glm::scale(trans, glm::vec3(m_wratio, m_hratio, 1.0f));
-
-        // std::cout << m_wratio << " " << m_hratio << std::endl;
-
-        // glm::mat4 trans(1.0f);
 
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); 
 
@@ -418,7 +367,6 @@ namespace apc
 
         glBindTexture(GL_TEXTURE_2D, m_renderTexture );
 
-        // glViewport(0,0,m_proportionWidth,m_proportionHeight);
         glViewport(0,0,m_width,m_height);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
@@ -428,9 +376,9 @@ namespace apc
 
     void GLRenderer::destroy()
     {
-        // glDeleteVertexArrays(1, &VAO);
-        // glDeleteBuffers(1, &VBO);
-        // glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
     }
 
     int GLRenderer::getWidth()

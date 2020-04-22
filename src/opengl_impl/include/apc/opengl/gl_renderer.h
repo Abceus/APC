@@ -28,8 +28,7 @@ namespace apc
         int getSmallerSide() const;
         float m_hratio;
         float m_wratio;
-        // GLTextureResourcePtr m_texture;
-        // GLuint VBO, VAO, EBO;
+
         GLuint m_shaderProgram;
         GLuint m_renderTextureShaderProgram;
         int m_width;

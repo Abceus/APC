@@ -10,7 +10,8 @@ class Android(Module):
         if not os.path.exists("./build/android"):
             os.mkdir("./build/android")
         copy_changed_directory("./android", "./build/android")
-        copy_changed_directory("./src", "./build/android/lib/src/main/cpp/apc")
+        copy_changed_directory("./src/core", "./build/android/lib/src/main/cpp/apc")
+        copy_changed_directory("./src/opengl_impl", "./build/android/lib/src/main/cpp/opengl_impl")
         copy_changed_directory("./test_game", "./build/android/lib/src/main/cpp/test_game")
 
     def build(self):

@@ -20,12 +20,12 @@
 #include <android/log.h>
 #include <android/asset_manager_jni.h>
 #include <string>
-#include "core/game.h"
-#include "core/log.h"
-#include "core/file_loader.h"
-#include "core/coord.h"
-#include "base/context.h"
-#include "base/gl_renderer.h"
+#include "apc/game.h"
+#include "apc/log.h"
+#include "apc/file_loader.h"
+#include "apc/coord.h"
+#include "apc/context.h"
+#include "apc/opengl/gl_renderer.h"
 #include "test_game.h"
 
 #define LOGI(...) \
@@ -37,8 +37,6 @@
  *
  *   app/src/main/java/com/example/hellolibs/MainActivity.java
  */
-
-const int WIDTH = 800, HEIGHT = 600;
 
 class AndroidLog : public apc::ILog
 {

@@ -11,8 +11,6 @@
 #include "apc/components/updatable.h"
 #include "apc/components/clickable.h"
 
-#include <iostream>
-
 namespace apc
 {
     class SceneObject

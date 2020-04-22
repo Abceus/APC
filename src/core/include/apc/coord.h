@@ -1,7 +1,7 @@
 #pragma once
 
 #include "apc/specialization_check.h"
-#include "apc/math.h"
+#include "apc/math_utils.h"
 
 #include <type_traits>
 
@@ -86,8 +86,8 @@ namespace apc
     Coord<T> Coord<T>::operator+ (const Coord<T>& rhs) const
     {
         Coord<T> res;
-        res.x = x + rhs;
-        res.y = y + rhs;
+        res.x = x + rhs.x;
+        res.y = y + rhs.y;
         return res;
     }
 

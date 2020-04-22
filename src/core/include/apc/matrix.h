@@ -5,7 +5,7 @@
 #include <cmath>
 
 #include "apc/coord.h"
-#include "apc/math.h"
+#include "apc/math_utils.h"
 
 
 namespace apc
@@ -207,10 +207,10 @@ namespace apc
     {
         Matrix<T, 3, 3> result(1);
         auto rad = radians(angle);
-        result[0][0] = cos(rad); 
-        result[0][1] = -sin(rad);
-        result[1][0] = sin(rad); 
-        result[1][1] = cos(rad);
+        result[0][0] = std::cos(rad); 
+        result[0][1] = -std::sin(rad);
+        result[1][0] = std::sin(rad); 
+        result[1][1] = std::cos(rad);
         return origin * result;
     }
 

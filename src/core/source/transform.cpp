@@ -66,11 +66,23 @@ namespace apc
             result = m_parent->getMatrix();
         }
 
-        auto biggerSide = static_cast<float>( std::max(Context::getInstance().getScaledScreenSize().x, Context::getInstance().getScaledScreenSize().y) );
+        auto smallerSide = static_cast<float>( std::min(Context::getInstance().getScreenSize().x, Context::getInstance().getScreenSize().y) );
+        auto biggerSide = static_cast<float>( std::max(Context::getInstance().getScreenSize().x, Context::getInstance().getScreenSize().y) );
 
-        result = Matrixf33::translate(result, m_position/biggerSide);
+        auto position = m_position / coord_cast<FCoord>( Context::getInstance().getScreenSize() );
 
-        result = Matrixf33::rotate(result, m_rotation);
+        if( Context::getInstance().getScreenSize().x > Context::getInstance().getScreenSize().y )
+        {
+            position.y = position.y * (smallerSide/biggerSide);
+        }
+        else if( Context::getInstance().getScreenSize().x < Context::getInstance().getScreenSize().y )
+        {
+            position.x = position.x * (smallerSide/biggerSide);
+        }
+
+        result = Matrixf33::translate(result, position);
+
+        result = Matrixf33::rotate(result, -m_rotation);
 
         result = Matrixf33::scale(result, m_scale);
 

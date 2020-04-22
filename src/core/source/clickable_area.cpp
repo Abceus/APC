@@ -17,7 +17,6 @@ namespace apc
 
     void ClickableArea::click( const ICoord& value )
     {
-        std::cout << value.x << " " << value.y << std::endl;
         if(!m_callback)
         {
             return;

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
 add_subdirectory(apc)
+add_subdirectory(opengl_impl)
 add_subdirectory(test_game)
 add_subdirectory(apc_jni)
