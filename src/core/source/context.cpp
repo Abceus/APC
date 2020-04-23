@@ -47,12 +47,12 @@ namespace apc
 
         if(getRealScreenSize().x > getScaledScreenSize().x)
         {
-            v.x = v.x + (getRealScreenSize().x - getScaledScreenSize().x) / 2.0f;
+            v.x = v.x - (getRealScreenSize().x - getScaledScreenSize().x) / 2.0f;
         }
 
         if(getRealScreenSize().y > getScaledScreenSize().y)
         {
-            v.y = v.y + (getRealScreenSize().y - getScaledScreenSize().y) / 2.0f;
+            v.y = v.y - (getRealScreenSize().y - getScaledScreenSize().y) / 2.0f;
         }
 
         log(v.x, v.y);
