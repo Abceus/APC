@@ -4,18 +4,25 @@
 #include <memory>
 #include <map>
 #include <vector>
+#include <string>
 #include <algorithm>
 
 #include "apc/component.h"
-#include "apc/components/drawable.h"
 #include "apc/components/updatable.h"
 #include "apc/components/clickable.h"
 
 namespace apc
 {
+    class IDrawable; 
+
     class SceneObject
     {
     public:
+        SceneObject( const std::string& layer = std::string("main") );
+
+        void setLayer( const std::string& layer );
+        std::string getLayer() const;
+
         template<typename T, typename std::enable_if<std::is_convertible<T*, Component*>::value, T>::type* = nullptr>
         void addComponent();
 
@@ -36,6 +43,7 @@ namespace apc
         std::vector<std::shared_ptr<IDrawable>> m_drawables;
         std::vector<std::shared_ptr<IUpdatable>> m_updatables;
         std::vector<std::shared_ptr<IClickable>> m_clickables;
+        std::string m_layer;
     };
 
 

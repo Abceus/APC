@@ -3,6 +3,22 @@
 
 namespace apc
 {
+    SceneObject::SceneObject( const std::string& layer )
+        : m_layer( layer )
+    {
+
+    }
+
+    void SceneObject::setLayer( const std::string& layer )
+    {
+        m_layer = layer;
+    }
+
+    std::string SceneObject::getLayer() const
+    {
+        return m_layer;
+    }
+
     // void SceneObject::draw()
     // {
     //     for(auto& drawable: m_drawables)

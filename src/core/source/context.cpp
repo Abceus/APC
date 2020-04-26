@@ -1,4 +1,6 @@
 #include "context.h"
+#include "vertex_batching.h"
+#include "components/drawable.h"
 
 namespace apc
 {
@@ -31,7 +33,26 @@ namespace apc
         auto currentScene = m_sceneManager->getCurrentScene();
         if(currentScene)
         {
-            m_renderer->draw(currentScene);
+            VertexBatcher batcher; 
+
+            batcher.initLayers(currentScene->getLayers());
+
+            auto screenSize = coord_cast<FCoord>( getScreenSize() );
+
+            batcher.setVirtualScreenSize(screenSize);
+
+            auto objects = currentScene->getObjects();
+
+            for(auto& object: objects)
+            {
+                auto drawables = object->getDrawables();
+                for(auto& drawable: drawables)
+                {
+                    drawable->draw(batcher);
+                }
+            }
+
+            m_renderer->draw(batcher);
         }
     }
 

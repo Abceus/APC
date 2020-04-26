@@ -16,7 +16,7 @@ namespace apc
         GLRenderer();
         void init() override;
         void screenChange(int w, int h) override;
-        void draw(std::shared_ptr<IScene> scene) override;
+        void draw(const VertexBatcher& batcher) override;
         void destroy() override;
         int getWidth() override;
         int getHeight() override;

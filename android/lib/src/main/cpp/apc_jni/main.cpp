@@ -26,6 +26,7 @@
 #include "apc/coord.h"
 #include "apc/context.h"
 #include "apc/opengl/gl_renderer.h"
+#include "apc/texture.h"
 #include "test_game.h"
 
 #define LOGI(...) \
@@ -82,6 +83,7 @@ Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject asse
     apc::Context::getInstance().setLogImpl<AndroidLog>();
     AAssetManager *nativeAssetManager = AAssetManager_fromJava(env, assetManager);
     apc::Context::getInstance().setLoaderImpl<AndroidFileLoader>(nativeAssetManager);
+    apc::Texture::setTextureFactory(std::static_pointer_cast<apc::ITextureFactory>(std::make_shared<apc::TextureFactory<apc::GLTextureResource>>()));
     apc::Context::getInstance().init<apc::GLRenderer, TestGame>();
 }
 

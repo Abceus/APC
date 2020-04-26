@@ -10,9 +10,7 @@ endif()
 add_library(APC_OPENGL SHARED
         source/gl_renderer.cpp
         source/resources/image.cpp
-        source/resources/gl_texture.cpp
-        source/sprite.cpp
-        source/scene.cpp)
+        source/resources/gl_texture.cpp)
 
 target_include_directories(APC_OPENGL 
         PRIVATE ${OPENGL_INCLUDE_DIRS}

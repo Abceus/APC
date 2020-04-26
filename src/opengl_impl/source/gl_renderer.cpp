@@ -6,7 +6,7 @@
 
 #include "gl.h"
 #include "apc/context.h"
-#include "apc/transform.h"
+#include "apc/vertex_batching.h"
 
 namespace apc
 {
@@ -36,48 +36,48 @@ namespace apc
         const GLchar* fragmentShaderSource = "#version 300 es\n"
                                            "precision mediump float;\n"
                                            "in vec2 TexCoord;\n"
+                                           "in vec4 ColorFactor;\n"
                                            "out vec4 color;\n"
                                            "uniform sampler2D mainTexture;\n"
-                                           "uniform vec4 colorFactor;\n"
                                            "void main()\n"
                                            "{\n"
-                                                "color = texture(mainTexture, TexCoord) * colorFactor;\n"
+                                                "color = texture(mainTexture, TexCoord) * ColorFactor;\n"
                                            "}\0";
 
         const GLchar* vertexShaderSource = "#version 300 es\n"
                                             "layout (location = 0) in vec2 position;\n"
                                             "layout (location = 1) in vec2 texCoord;\n"
+                                            "layout (location = 2) in vec4 color;\n"
                                             "out vec2 TexCoord;\n"
-                                            "uniform vec2 hotspot;\n"
-                                            "uniform mat4 transform;\n"
-                                            "uniform mat4 size;\n"
+                                            "out vec4 ColorFactor;\n"
                                             "void main()\n"
                                             "{\n"
-                                                "gl_Position = transform * size  * vec4(position-hotspot, 0.0f, 1.0f);\n"
+                                                "gl_Position = vec4(position, 0.0f, 1.0f);\n"
                                                 "TexCoord = texCoord;\n"
+                                                "ColorFactor = color;\n"
                                             "}\0";
 #else
         const GLchar* fragmentShaderSource = "#version 330 core\n"
                                            "in vec2 TexCoord;\n"
+                                           "in vec4 ColorFactor;\n"
                                            "out vec4 color;\n"
                                            "uniform sampler2D mainTexture;\n"
-                                           "uniform vec4 colorFactor;\n"
                                            "void main()\n"
                                            "{\n"
-                                                "color = texture(mainTexture, TexCoord) * colorFactor;\n"
+                                                "color = texture(mainTexture, TexCoord) * ColorFactor;\n"
                                            "}\0";
 
         const GLchar* vertexShaderSource =  "#version 330 core\n"
                                              "layout (location = 0) in vec2 position;\n"
                                              "layout (location = 1) in vec2 texCoord;\n"
+                                             "layout (location = 2) in vec4 color;\n"
                                              "out vec2 TexCoord;\n"
-                                             "uniform vec2 hotspot;\n"
-                                             "uniform mat4 transform;\n"
-                                             "uniform mat4 size;\n"
+                                             "out vec4 ColorFactor;\n"
                                              "void main()\n"
                                              "{\n"
-                                                "gl_Position = transform * size * vec4(position-hotspot, 0.0f, 1.0f);\n"
+                                                "gl_Position = vec4(position, 0.0f, 1.0f);\n"
                                                 "TexCoord = texCoord;\n"
+                                                "ColorFactor = color;\n"
                                              "}\0";
 
 #endif
@@ -220,7 +220,7 @@ namespace apc
         glDrawBuffers(1, DrawBuffers); 
     }
 
-    void GLRenderer::draw(std::shared_ptr<IScene> scene)
+    void GLRenderer::draw(const VertexBatcher& batcher)
     {
         glViewport(0, 0, static_cast<int>( m_proportionWidth ), static_cast<int>( m_proportionHeight) );
 
@@ -231,109 +231,54 @@ namespace apc
 
         glUseProgram( m_shaderProgram );
 
-        auto layers = scene->getObjects();
+        auto batches = batcher.getBatches();
 
-        for(auto& layer: layers)
+        for(auto& layer: batches)
         {
             for(auto& object: layer)
             {
-                // if(drawable->enabled())
+                GLuint spriteVBO, spriteVAO, spriteEBO;
+
+                glGenVertexArrays(1, &spriteVAO);
+                glGenBuffers(1, &spriteVBO);
+                glGenBuffers(1, &spriteEBO);
+
+                glBindVertexArray(spriteVAO);
+
+                glBindBuffer(GL_ARRAY_BUFFER, spriteVBO);
+                glBufferData(GL_ARRAY_BUFFER, object.vertices.size() * sizeof(Vertex), object.vertices.data(), GL_DYNAMIC_DRAW);
+
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteEBO);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER, object.indices.size() * sizeof(unsigned int), object.indices.data(), GL_DYNAMIC_DRAW);
+
+                // Position attribute
+                glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+                glEnableVertexAttribArray(0);
+                
+                // TexCoord attribute
+                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+                glEnableVertexAttribArray(1);
+                
+                // TexCoord attribute
+                glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(4 * sizeof(GLfloat)));
+                glEnableVertexAttribArray(2);
+
+
+                GLuint texture = 0;
+                if(object.texture)
                 {
-                    auto transform = object->getComponent<Transform>();
-
-                    GLuint transformLoc = glGetUniformLocation(m_shaderProgram, "transform");        
-                    
-                    float aspectw = 1.0f;
-                    float aspecth = 1.0f;
-
-                    if(m_proportionWidth > m_proportionHeight)
-                    {
-                        aspecth = (m_proportionHeight/static_cast<float>(m_proportionWidth));
-                    }
-                    else if(m_proportionHeight > m_proportionWidth)
-                    {
-                        aspectw = (m_proportionWidth/static_cast<float>(m_proportionHeight));
-                    }
-
-                    Matrixf33 trans(1.0f);
-
-                    trans = Matrixf33::cut(trans, 0.0f, aspectw, aspecth, 0.0f);
-                    
-                    if(transform)
-                    {
-                        trans = trans * transform->getScaledMatrix();
-                    }
-
-                    glm::mat4 glmMat(1.0f);
-
-                    glmMat[0][0] = trans[0][0];
-                    glmMat[1][0] = trans[0][1];
-                    glmMat[2][0] = 0.0f;
-                    glmMat[3][0] = trans[0][2];
-
-                    glmMat[0][1] = trans[1][0];
-                    glmMat[1][1] = trans[1][1];
-                    glmMat[2][1] = 0.0f;
-                    glmMat[3][1] = trans[1][2];
-
-                    glmMat[0][2] = 0.0f;
-                    glmMat[1][2] = 0.0f;
-                    glmMat[2][2] = 1.0f;
-                    glmMat[3][2] = 0.0f;
-
-                    glmMat[0][3] = trans[2][0];
-                    glmMat[1][3] = trans[2][1];
-                    glmMat[2][3] = 0.0f;
-                    glmMat[3][3] = trans[2][2];
-
-                    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(glmMat));
-
-                    GLuint colorLocation = glGetUniformLocation(m_shaderProgram, "colorFactor");
-                    glm::vec4 glmColor(1.0f, 1.0f, 1.0f, 1.0f);
-                    if(transform)
-                    {
-                        auto color = transform->getColor();
-                        glmColor = glm::vec4(color.r, color.g, color.b, color.a);
-                    }
-                    glUniform4fv(colorLocation, 1, glm::value_ptr(glmColor));
-
-                    GLuint hotspotLocation = glGetUniformLocation(m_shaderProgram, "hotspot");
-
-                    auto drawables = object->getDrawables();
-                    float fwidth = static_cast<float>(m_width);
-                    float fheight = static_cast<float>(m_height);
-                    GLuint sizeLoc = glGetUniformLocation(m_shaderProgram, "size");
-
-                    for(auto& drawable: drawables)
-                    {
-                        auto size = drawable->getSize();
-
-                        auto virtualWidth = Context::getInstance().getGameConfig().width;
-                        auto virtualHeight = Context::getInstance().getGameConfig().height;
-
-                        auto minScreen = static_cast<float>(std::min(virtualWidth, virtualHeight));
-                        auto maxScreen = static_cast<float>(std::max(virtualWidth, virtualHeight));
-
-                        auto s = size;
-
-                        s.x = size.x/virtualWidth;
-                        s.y = size.y/virtualHeight;
-
-                        if(virtualWidth > virtualHeight) 
-                        {
-                            s.y = s.y * (minScreen/maxScreen);
-                        } else if(virtualWidth < virtualHeight)
-                        {
-                            s.x = s.x * (minScreen/maxScreen);
-                        }
-
-                        auto sizeTransform = glm::scale(glm::mat4(1.0f), glm::fvec3(s.x, s.y, 1.0f));
-                        glUniformMatrix4fv(sizeLoc, 1, GL_FALSE, glm::value_ptr(sizeTransform));
-                        auto hotspot = drawable->getHotspot();
-                        glUniform2fv(hotspotLocation, 1, glm::value_ptr(glm::fvec2(hotspot.x/size.x, hotspot.y/size.y)));
-                        drawable->draw();
-                    }
+                    texture = static_resource_cast<GLTextureResource>(object.texture)->getIndex();
                 }
+
+                glBindTexture(GL_TEXTURE_2D, texture );
+
+                glDrawElements(GL_TRIANGLES, object.indices.size(), GL_UNSIGNED_SHORT, 0);
+
+                glBindVertexArray(0); // Unbind VAO
+
+                glDeleteVertexArrays(1, &spriteVAO);
+                glDeleteBuffers(1, &spriteVBO);
+                glDeleteBuffers(1, &spriteEBO);
             }
         }
 
@@ -361,7 +306,6 @@ namespace apc
         trans = glm::scale(trans, glm::vec3(m_wratio, m_hratio, 1.0f));
 
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); 
-
 
         glBindVertexArray(VAO);
 

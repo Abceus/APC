@@ -1,9 +1,6 @@
-#include "scene.h"
+#include "scene_impl.h"
 #include <algorithm>
-#include "gl.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "apc/context.h"
+#include "context.h"
 
 namespace apc
 {
@@ -11,8 +8,13 @@ namespace apc
     {
         m_layers = layers;
         m_objects.clear();
-        m_objects.resize(m_layers.size());
+        // m_objects.resize(m_layers.size());
         // m_rootNode = std::make_shared<Position>();
+    }
+
+    std::vector<std::string> Scene::getLayers() const
+    {
+        return m_layers;
     }
 
     // void Scene::draw(GLuint shaderProgram)
@@ -65,38 +67,54 @@ namespace apc
 
     void Scene::addSceneObject(std::shared_ptr<SceneObject> gameObject, std::string layer)
     {
-        auto layerIt = std::find(m_layers.begin(), m_layers.end(), layer);
-        if(layerIt != m_layers.end())
+        // auto layerIt = std::find(m_layers.begin(), m_layers.end(), layer);
+        // if(layerIt != m_layers.end())
+        // {
+        //     auto index = std::distance(m_layers.begin(), layerIt);
+        //     m_objects[index].emplace_back(gameObject);
+        // }
+        auto objectIt = std::find(m_objects.begin(), m_objects.end(), gameObject);
+        if(objectIt == m_objects.end())
         {
-            auto index = std::distance(m_layers.begin(), layerIt);
-            m_objects[index].emplace_back(gameObject);
+            m_objects.emplace_back(gameObject);
         }
     }
 
     void Scene::removeSceneObject(std::shared_ptr<SceneObject> gameObject, std::string layer)
     {
-        auto layerIt = std::find(m_layers.begin(), m_layers.end(), layer);
-        if(layerIt != m_layers.end())
+        // auto layerIt = std::find(m_layers.begin(), m_layers.end(), layer);
+        // if(layerIt != m_layers.end())
+        // {
+        //     auto index = std::distance(m_layers.begin(), layerIt);
+        //     m_objects[index].remove(gameObject);
+        // }
+
+        auto objectIt = std::find(m_objects.begin(), m_objects.end(), gameObject);
+        if(objectIt != m_objects.end())
         {
-            auto index = std::distance(m_layers.begin(), layerIt);
-            m_objects[index].remove(gameObject);
+            m_objects.erase(objectIt);
         }
     }
 
-    std::vector<std::list<std::shared_ptr<SceneObject>>> Scene::getObjects() const
+    // std::vector<std::list<std::shared_ptr<SceneObject>>> Scene::getObjects() const
+    // {
+    //     return m_objects;
+    // }
+
+    std::list<std::shared_ptr<SceneObject>> Scene::getObjects() const
     {
         return m_objects;
     }
 
     void Scene::update(float dt)
     {
-        for(auto& layerDrawables: m_objects)
+        for(auto& object: m_objects)
         {
-            for(auto& drawable: layerDrawables)
+            // for(auto& drawable: layerDrawables)
             {
                 // if(drawable->enabled())
                 {
-                    drawable->update(dt);
+                    object->update(dt);
                 }
             }
         }
@@ -104,13 +122,13 @@ namespace apc
 
     void Scene::click(const ICoord& coord)
     {
-        for(auto& layerDrawables: m_objects)
+        for(auto& object: m_objects)
         {
-            for(auto& drawable: layerDrawables)
+            // for(auto& drawable: layerDrawables)
             {
                 // if(drawable->enabled())
                 {
-                    drawable->click(coord);
+                    object->click(coord);
                 }
             }
         }

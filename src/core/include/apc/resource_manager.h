@@ -14,14 +14,20 @@ namespace apc
     public:
         ResourcePtr();
         ResourcePtr( std::function<void(std::string)>&& slot, const std::string& path, const IFileLoader* loader );
-        ResourcePtr( const ResourcePtr& copy );
-        ResourcePtr( ResourcePtr&& copy ) noexcept;
+        ResourcePtr( const ResourcePtr<ResourceType>& copy );
+        template<typename OtherResourceType>
+        ResourcePtr( const ResourcePtr<OtherResourceType>& alias, ResourceType* ptr );
+        ResourcePtr( ResourcePtr<ResourceType>&& copy ) noexcept;
         ~ResourcePtr();
         ResourceType* operator->();
+        ResourceType* get();
         operator bool() const;
         ResourcePtr<ResourceType>& operator=(ResourcePtr<ResourceType> const&);
         ResourcePtr<ResourceType>& operator=(ResourcePtr<ResourceType>&&);
         void removeSignalDisable();
+        std::string getPath() const;
+        std::function<void(std::string)> getRemoveSignal() const;
+        long* getCounter() const;
     private:
         ResourceType* m_value;
         long* m_count;
@@ -60,7 +66,7 @@ namespace apc
     }
 
     template<typename ResourceType>
-    ResourcePtr<ResourceType>::ResourcePtr( const ResourcePtr &copy )
+    ResourcePtr<ResourceType>::ResourcePtr( const ResourcePtr<ResourceType> &copy )
     {
         m_count = copy.m_count;
         m_value = copy.m_value;
@@ -71,7 +77,7 @@ namespace apc
     }
 
     template<typename ResourceType>
-    ResourcePtr<ResourceType>::ResourcePtr( ResourcePtr&& copy ) noexcept
+    ResourcePtr<ResourceType>::ResourcePtr( ResourcePtr<ResourceType>&& copy ) noexcept
     {
         m_count = copy.m_count;
         m_value = copy.m_value;
@@ -79,6 +85,18 @@ namespace apc
         m_moved = false;
         m_removeSignal = std::move(copy.m_removeSignal);
         copy.m_moved = true;
+    }
+
+    template<typename ResourceType>
+    template<typename OtherResourceType>
+    ResourcePtr<ResourceType>::ResourcePtr( const ResourcePtr<OtherResourceType>& alias, ResourceType* ptr )
+    {
+        m_count = alias.getCounter();
+        m_value = ptr;
+        m_removeSignal = alias.getRemoveSignal();
+        m_path = alias.getPath();
+        m_moved = false;
+        (*m_count)++;  
     }
 
     template<typename ResourceType>
@@ -106,6 +124,12 @@ namespace apc
 
     template<typename ResourceType>
     ResourceType* ResourcePtr<ResourceType>::operator->()
+    {
+        return m_value;
+    }
+
+    template<typename ResourceType>
+    ResourceType* ResourcePtr<ResourceType>::get()
     {
         return m_value;
     }
@@ -147,6 +171,24 @@ namespace apc
     }
 
     template<typename ResourceType>
+    std::string ResourcePtr<ResourceType>::getPath() const
+    {
+        return m_path;
+    }
+
+    template<typename ResourceType>
+    std::function<void(std::string)> ResourcePtr<ResourceType>::getRemoveSignal() const
+    {
+        return m_removeSignal;
+    }
+
+    template<typename ResourceType>
+    long* ResourcePtr<ResourceType>::getCounter() const
+    {
+        return m_count;
+    }
+
+    template<typename ResourceType>
     ResourcePtr<ResourceType> ResourceManager<ResourceType>::getResource( const std::string &path, const IFileLoader* loader )
     {
         auto found = m_resources.find(path);
@@ -165,5 +207,11 @@ namespace apc
         {
             resource.second.removeSignalDisable();
         }
+    }
+
+    template<typename CastResourceType, typename OriginResourceType>
+    ResourcePtr<CastResourceType> static_resource_cast( ResourcePtr<OriginResourceType> resource )
+    {
+        return ResourcePtr<CastResourceType>( resource, static_cast<CastResourceType*>(resource.get()) );
     }
 }

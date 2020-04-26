@@ -1,8 +1,8 @@
 #include "test_game.h"
 #include "apc/resource_manager.h"
-#include "apc/opengl/resources/gl_texture.h"
-#include "apc/opengl/scene.h"
-#include "apc/opengl/sprite.h"
+#include "apc/texture.h"
+#include "apc/scene_impl.h"
+#include "apc/sprite.h"
 #include "apc/transform.h"
 #include "apc/clickable_area.h"
 #include "apc/scene_object.h"
@@ -31,7 +31,7 @@ void TestGame::init()
     auto currentScene = m_context->getSceneManager()->getCurrentScene();
     currentScene->initLayers({"main"});
 
-    auto texture = m_context->getResource<apc::GLTextureResource>( "Law-abidingAfricanAmerican.png" );
+    auto texture = apc::Texture::makeTexture( "Law-abidingAfricanAmerican.png" );
 
     auto newObject = std::make_shared<apc::SceneObject>();
     newObject->addComponent<apc::Transform>();
@@ -45,8 +45,8 @@ void TestGame::init()
     newObject->addComponent<Afro>();
 
     newObject->addComponent<apc::ClickableArea>();
-    newObject->getComponent<apc::ClickableArea>()->setArea(apc::Polygon::makeSquade({-texture->getWidth()/2.0f, -texture->getHeight()/2.0f}, 
-                                                            {texture->getWidth()/2.0f, texture->getHeight()/2.0f}));
+    newObject->getComponent<apc::ClickableArea>()->setArea(apc::Polygon::makeSquade({-texture->getSize().x/2.0f, -texture->getSize().y/2.0f}, 
+                                                            {texture->getSize().x/2.0f, texture->getSize().y/2.0f}));
     newObject->getComponent<apc::ClickableArea>()->setCallback([newObject]{ newObject->getComponent<Afro>()->changeColor(); });
 
     currentScene->addSceneObject(newObject, "main");

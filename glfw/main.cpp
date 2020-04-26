@@ -1,12 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 #include "test_game.h"
 #include "apc/context.h"
 #include "apc/opengl/gl_renderer.h"
 #include "apc/log.h"
 #include "apc/file_loader.h"
+#include "apc/texture.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -89,6 +91,7 @@ public:
 
         apc::Context::getInstance().setLogImpl<PCLog>();
         apc::Context::getInstance().setLoaderImpl<PCFileLoader>();
+        apc::Texture::setTextureFactory(std::static_pointer_cast<apc::ITextureFactory>(std::make_shared<apc::TextureFactory<apc::GLTextureResource>>()));
         apc::Context::getInstance().init<apc::GLRenderer, TestGame>();
         apc::Context::getInstance().screenSizeChanged({width, height});
     }

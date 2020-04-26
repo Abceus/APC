@@ -13,7 +13,11 @@ add_library(APC SHARED
         source/scene_manager.cpp
         source/context.cpp
         source/math_utils.cpp
-        source/polygon.cpp)
+        source/polygon.cpp
+        source/vertex_batching.cpp
+        source/texture.cpp
+        source/scene_impl.cpp
+        source/sprite.cpp)
 
 target_include_directories(APC
         PRIVATE include/apc

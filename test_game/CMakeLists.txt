@@ -7,4 +7,4 @@ add_library(
         source/components/afro.cpp
         )
 target_include_directories(test_game PUBLIC include)
-target_link_libraries(test_game APC APC_OPENGL)
+target_link_libraries(test_game APC)
