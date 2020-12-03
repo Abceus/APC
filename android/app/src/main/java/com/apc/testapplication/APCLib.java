@@ -26,6 +26,8 @@ public class APCLib {
      }
 
      public static native void init(AssetManager assetManager);
+     public static native void initRender();
+     public static native void deinitRender();
      public static native void screenSizeChanged(int width, int height);
      public static native void draw();
      public static native void update( float dt );

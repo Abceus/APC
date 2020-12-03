@@ -93,6 +93,7 @@ public:
         apc::Context::getInstance().setLoaderImpl<PCFileLoader>();
         apc::Texture::setTextureFactory(std::static_pointer_cast<apc::ITextureFactory>(std::make_shared<apc::TextureFactory<apc::GLTextureResource>>()));
         apc::Context::getInstance().init<apc::GLRenderer, TestGame>();
+        apc::Context::getInstance().initRender();
         apc::Context::getInstance().screenSizeChanged({width, height});
     }
     void run()
@@ -112,6 +113,7 @@ public:
 
     void deinit()
     {
+        apc::Context::getInstance().deinitRender();
         apc::Context::getInstance().quit();
         glfwTerminate();
     }

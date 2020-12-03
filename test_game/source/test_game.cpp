@@ -31,7 +31,6 @@ void TestGame::init()
     auto currentScene = m_context->getSceneManager()->getCurrentScene();
     currentScene->initLayers({"main"});
 
-    auto texture = apc::Texture::makeTexture( "Law-abidingAfricanAmerican.png" );
 
     auto newObject = std::make_shared<apc::SceneObject>();
     newObject->addComponent<apc::Transform>();
@@ -40,13 +39,14 @@ void TestGame::init()
     newObject->getComponent<apc::Transform>()->setPosition(center);
     newObject->getComponent<apc::Transform>()->setScale(0.5f);
     newObject->addComponent<apc::Sprite>();
-    newObject->getComponent<apc::Sprite>()->setTexture(texture);
+    newObject->getComponent<apc::Sprite>()->setTexture( "Law-abidingAfricanAmerican.png" );
 
     newObject->addComponent<Afro>();
 
     newObject->addComponent<apc::ClickableArea>();
-    newObject->getComponent<apc::ClickableArea>()->setArea(apc::Polygon::makeSquade({-texture->getSize().x/2.0f, -texture->getSize().y/2.0f}, 
-                                                            {texture->getSize().x/2.0f, texture->getSize().y/2.0f}));
+    auto sprite = newObject->getComponent<apc::Sprite>();
+    newObject->getComponent<apc::ClickableArea>()->setArea(apc::Polygon::makeSquade({-sprite->getSize().x/2.0f, -sprite->getSize().y/2.0f}, 
+                                                            {sprite->getSize().x/2.0f, sprite->getSize().y/2.0f}));
     newObject->getComponent<apc::ClickableArea>()->setCallback([newObject]{ newObject->getComponent<Afro>()->changeColor(); });
 
     currentScene->addSceneObject(newObject, "main");

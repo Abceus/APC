@@ -25,6 +25,10 @@ namespace apc
         void init();
 
         void init();
+
+        void initRender();
+        void deinitRender();
+
         void update( float dt );
         void draw();
         void zoom( float delta );

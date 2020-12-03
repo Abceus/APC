@@ -132,8 +132,6 @@ namespace apc
 
         m_renderTextureShaderProgram = loadShader(fragmentShaderSource2, vertexShaderSource2);
 
- 
-
         GLfloat vertices[] = {
                 // Positions        // Texture Coords
                 1.0f, 1.0f,         1.0f, 1.0f, // Bottom Right
@@ -320,9 +318,20 @@ namespace apc
 
     void GLRenderer::destroy()
     {
+        glDeleteProgram(m_shaderProgram);
+        m_shaderProgram = 0;
+        glDeleteProgram(m_renderTextureShaderProgram);
+        m_renderTextureShaderProgram = 0;
+        glDeleteFramebuffers(1, &m_frameBuffer);
+        m_frameBuffer = 0;
+        glDeleteTextures(1, &m_renderTexture);
+        m_renderTexture = 0;
         glDeleteVertexArrays(1, &VAO);
+        VAO = 0;
         glDeleteBuffers(1, &VBO);
+        VBO = 0;
         glDeleteBuffers(1, &EBO);
+        EBO = 0;
     }
 
     int GLRenderer::getWidth()

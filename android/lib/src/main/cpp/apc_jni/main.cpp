@@ -88,6 +88,16 @@ Java_com_apc_testapplication_APCLib_init(JNIEnv *env, jobject thiz, jobject asse
 }
 
 extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_initRender(JNIEnv *env, jobject thiz) {
+    apc::Context::getInstance().initRender();
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_apc_testapplication_APCLib_deinitRender(JNIEnv *env, jobject thiz) {
+    apc::Context::getInstance().deinitRender();
+}
+
+extern "C" JNIEXPORT void JNICALL
 Java_com_apc_testapplication_APCLib_screenSizeChanged(JNIEnv *env, jobject thiz, jint width, jint height) {
     apc::Context::getInstance().screenSizeChanged({width, height});
 }

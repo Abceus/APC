@@ -12,10 +12,47 @@ namespace apc
 
     void Context::init()
     {
-        m_renderer->init();
         m_sceneManager = std::make_unique<SceneManager>();
         m_game->setContext(this);
         m_game->init();
+    }
+
+    void Context::initRender()
+    {
+        m_renderer->init();
+
+        auto currentScene = m_sceneManager->getCurrentScene();
+        if(currentScene)
+        {
+            auto objects = currentScene->getObjects();
+            for(auto& object: objects)
+            {
+                auto drawables = object->getDrawables();
+                for(auto& drawable: drawables)
+                {
+                    drawable->init();
+                }
+            }
+        }
+    }
+        
+    void Context::deinitRender()
+    {
+        auto currentScene = m_sceneManager->getCurrentScene();
+        if(currentScene)
+        {
+            auto objects = currentScene->getObjects();
+            for(auto& object: objects)
+            {
+                auto drawables = object->getDrawables();
+                for(auto& drawable: drawables)
+                {
+                    drawable->deinit();
+                }
+            }
+        }
+
+        m_renderer->destroy();
     }
 
     void Context::update( float dt )
@@ -113,7 +150,6 @@ namespace apc
     void Context::quit()
     {
         m_game->quit();
-        m_renderer->destroy();
     }
 
     void Context::screenSizeChanged( const ICoord& newSize )

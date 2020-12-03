@@ -28,11 +28,24 @@ public class MainActivity extends Activity implements OnTouchListener {
     @Override protected void onPause() {
         super.onPause();
         mView.onPause();
+        Log.w("APC", "QWe pause");
     }
 
     @Override protected void onResume() {
         super.onResume();
         mView.onResume();
+        Log.w("APC", "QWe resume");
+    }
+
+    @Override protected void onStart() {
+        super.onStart();
+        Log.w("APC", "QWe start");
+    }
+
+    @Override protected void onStop() {
+        APCLib.deinitRender();
+        super.onStop();
+        Log.w("APC", "QWe stop");
     }
  
 	private Timer holdTimer;

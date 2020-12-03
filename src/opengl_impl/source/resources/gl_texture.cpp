@@ -7,6 +7,7 @@ namespace apc
             : m_index( 0 )
     {
     }
+    
     GLTextureResource::GLTextureResource( const std::string& path, const IFileLoader* loader )
      : m_index( 0 )
     {

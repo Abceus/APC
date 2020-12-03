@@ -344,6 +344,8 @@ class GL2JNIView extends GLSurfaceView {
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             APCLib.init(m_context.getAssets());
+            Log.w(TAG, "QWe create surface!");
+            APCLib.initRender();
         }
     }
 }

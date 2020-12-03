@@ -6,51 +6,23 @@
 
 namespace apc
 {
-    void Sprite::setTexture(TexturePtr texture)
+    void Sprite::setTexture(std::string texture)
     {
-        m_texture = texture;
+        m_textureName = texture;
 
-        m_size = coord_cast<FCoord>( m_texture->getSize() );
-
-        m_hotspot = { m_size.x/2.0f, m_size.y/2.0f };
-
-        // GLfloat vertices[] = {
-        //         // Positions        // Texture Coords
-        //         1.0f, 1.0f,         1.0f, 1.0f, // Bottom Right
-        //         1.0f, 0.0f,         1.0f, 0.0f, // Top Right
-        //         0.0f, 0.0f,         0.0f, 0.0f, // Top Left
-        //         0.0f, 1.0f,         0.0f, 1.0f  // Bottom Left
-        // };
-
-        // GLshort indices[] = {  // Note that we start from 0!
-        //         0, 1, 3, // First Triangle
-        //         1, 2, 3  // Second Triangle
-        // };
-
-        // glGenVertexArrays(1, &VAO);
-        // glGenBuffers(1, &VBO);
-        // glGenBuffers(1, &EBO);
-
-        // glBindVertexArray(VAO);
-
-        // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-        // // Position attribute
-        // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-        // glEnableVertexAttribArray(0);
-        // // TexCoord attribute
-        // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
-        // glEnableVertexAttribArray(1);
-
-        // glBindVertexArray(0); // Unbind VAO
+        if(m_initialized)
+        {
+            init();
+        }
     }
 
     void Sprite::draw(VertexBatcher& batcher)
     {
+        if(!m_initialized)
+        {
+            return;
+        }
+
         auto sceneObject = getSceneObject();
         auto transform = sceneObject->getComponent<Transform>();
         auto matrix = transform->getScaledMatrix();
@@ -96,6 +68,28 @@ namespace apc
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
         // glBindVertexArray(0);
+    }
+
+    void Sprite::init()
+    {
+        if(!m_textureName.empty())
+        {
+            m_texture = Texture::makeTexture(m_textureName);
+
+            m_size = coord_cast<FCoord>( m_texture->getSize() );
+
+            m_hotspot = { m_size.x/2.0f, m_size.y/2.0f };
+
+            m_initialized = true;
+        }
+    }
+
+    void Sprite::deinit()
+    {
+        m_texture = TexturePtr();
+        m_size = { 0.0f, 0.0f };
+        m_hotspot = { 0.0f, 0.0f };
+        m_initialized = false;
     }
 
     FCoord Sprite::getHotspot() const
